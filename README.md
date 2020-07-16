@@ -18,11 +18,9 @@ The MDP SDK contains the following peripherals,example programs for baremetal de
 - MDP-TOOLS [git clone http://10.176.19.212:3000/MDP/mdp-tools]
 -
 
-Clone the repository
-
 ### Creating Workspace
 
-This needs to be done every time you want a clean setup based on the latest layers.
+Clone the repository
 
 ```bash
 git clone http://10.176.19.212:3000/MDP/mdp-sdk
