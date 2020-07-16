@@ -32,7 +32,7 @@ cd mdp-sdk
 ### Setting up Build Environment
 
 ```bash
-. ./setup-env.sh
+./setup-env.sh
 ```
 ### Compile sample program
 
@@ -49,4 +49,4 @@ make
 Transfer the binary file to board.
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://opensource.org/licenses/MIT)
