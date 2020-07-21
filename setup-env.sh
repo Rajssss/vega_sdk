@@ -28,18 +28,41 @@
 
 MDP_SDK=`pwd`
 
-#echo "$MDP_TOOLS"
-echo "Adding environmet variables to .bashrc"
+CONFIG_PATH=~/.config/mdp-tools
+mkdir -p $CONFIG_PATH
 
-mdp_sdk_flag=$(grep -o "MDP_SDK" -a ~/.bashrc|wc -l)
-if [[ $mdp_sdk_flag == "1" ]]; then
-	echo "MDP SDK path already present"
-else		
-	echo "export MDP_SDK=$MDP_SDK" >> ~/.bashrc	
+set_property(){
+filename=$CONFIG_PATH/settings.mk
+
+if ! grep -R "^[#]*\s*${1}=.*" $filename &> /dev/null; then
+  #echo "APPENDING because '${1}' not found"
+  echo "$1=$2" >> $filename 
+else
+  #echo "SETTING because '${1}' found already"
+  sed -i "s|^[#]*\s*${1}=.*|$1=$2|" $filename
+fi
+}
+
+get_property()
+{
+ filename=$CONFIG_PATH/settings.mk
+ sed -rn "s/^${1}=([^\n]+)$/\1/p" $filename
+}
+
+
+echo "Setting up MDP SDK environmet"
+
+set_property "MDP_SDK" "$MDP_SDK"
+
+echo "MDP SDK Environment added"
+
+mdp_tool_flag=$(get_property "MDP_TOOLS")
+
+if [ -z "$mdp_tool_flag" ]
+then
+      echo "WARNING: Please install mdp-tools, and setup environment!"
 fi
 
-echo "---------------------------------------------------------------------"
-echo "Environment added, Please open new terminal to check the environment"
-echo "or you can run command: source ~/.bashrc "
-echo "---------------------------------------------------------------------"
+
+
 

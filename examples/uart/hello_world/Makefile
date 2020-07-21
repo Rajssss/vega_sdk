@@ -1,33 +1,33 @@
-######################################################################
- #
- #				File Name: Makefile
- #
- #####################################################################
- #
- # Project Name		: MDP - Microprocessor Development Project
- #
- # Project Code		: HD083D
- #
- # Created			: 07-Nov-2019
- #
- # Purpose			: MDP Bootloader
- #
- # Description		: First satge bootloader for MDP project
- #
- # Author(s)		: Premjith A V
- #
- # Version No		: 1.0.0
- #
- # Revisions		:
- #
- # Remarks			: For Single core and Dual core ASIC
- #
- # Copyright		: 2019, C-DAC, Trivandrum
- ######################################################################
+#-------------------------------------------------------------------- 
+#Project Name		: MDP - Microprocessor Development Project
+#Project Code		: HD083D
+#Created		: 07-Jan-2020
+#Filename		: Makefile
+#Purpose		: Sample hello world program
+#Description		: Sample hello program with uart print
+#Author(s)		: Premjith A V
+#Email			: premjith@cdac.in
+#--------------------------------------------------------------------    
+#See LICENSE for license details.
  
 #-----------------------------------------
 #           	Flags	                 #
 #-----------------------------------------
+CONFIG_PATH=~/.config/mdp-tools/settings.mk
+ifeq ("$(wildcard $(CONFIG_PATH))","")
+$(error Please install [MDP SDK]/[MDP Tools] and setup the environment)
+endif
+
+include $(CONFIG_PATH)
+
+ifeq ("$(wildcard $(MDP_TOOLCHAIN64_PATH))","")
+$(error Please install [MDP Tools] and setup the environment)
+endif
+
+ifeq ("$(wildcard $(MDP_SDK))","")
+$(error Please install [MDP SDK] and setup the environment)
+endif
+
 TOOLCHAIN_PATH=${MDP_TOOLCHAIN64_PATH}
 SDK_PATH=${MDP_SDK}
 CC=$(TOOLCHAIN_PATH)/riscv64-unknown-elf-gcc 
@@ -83,7 +83,8 @@ $(OBJECT_FILES_S): $(BIN)/%.o: %.S
 	@$(CC) $(CFLAGS) $(INC) -o $@ $<	
 
 	
+	
 $(COPY_FILES): $(BIN)/%: $(SDK_PATH)/bsp/%
 	@mkdir -p $(@D)
 	@cp -rf $< $@ 
-
+	
