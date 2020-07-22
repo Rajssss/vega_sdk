@@ -3,7 +3,7 @@
  * Name of the file                      :  spi_driver.c
  * Brief Description of file             :  Driver to control the spi device.
  * Name of Author                        :  Sreeju G R
- * Email ID                              :  sreeju@cdac.com
+ * Email ID                              :  sreeju@cdac.in
 
   Copyright (C) 2020  CDAC(T). All rights reserved.
 
