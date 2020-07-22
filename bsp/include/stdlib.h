@@ -14,8 +14,8 @@
 ******************************************************************************/
 
 
-#ifndef INCLUDE_SYSCALLS_H_
-#define INCLUDE_SYSCALLS_H_
+#ifndef INCLUDE_STDLIB_H_
+#define INCLUDE_STDLIB_H_
 
 typedef unsigned char  UC;	//1 Byte
 typedef unsigned int   UI;	//4 Bytes
@@ -26,4 +26,4 @@ int printf(const char* fmt, ...);
 
 
 
-#endif /* INCLUDE_SYSCALLS_H_ */
+#endif /* INCLUDE_STDLIB_H_ */

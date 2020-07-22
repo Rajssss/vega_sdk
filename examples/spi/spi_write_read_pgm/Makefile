@@ -20,13 +20,13 @@ endif
 
 include $(CONFIG_PATH)
 
-#ifeq ("$(wildcard $(MDP_TOOLCHAIN64_PATH))","")
-#$(error Please install [MDP Tools] and setup the environment)
-#endif
+ifeq ("$(wildcard $(MDP_TOOLCHAIN64_PATH))","")
+$(error Please install [MDP Tools] and setup the environment)
+endif
 
-#ifeq ("$(wildcard $(MDP_SDK))","")
-#$(error Please install [MDP SDK] and setup the environment)
-#endif
+ifeq ("$(wildcard $(MDP_SDK))","")
+$(error Please install [MDP SDK] and setup the environment)
+endif
 
 TOOLCHAIN_PATH=${MDP_TOOLCHAIN64_PATH}
 SDK_PATH=${MDP_SDK}
@@ -35,7 +35,7 @@ CFLAGS=-c -mcmodel=medany -march=rv64imafd -fno-builtin-printf
 LIB=
 LDFLAGS= -mcmodel=medany -nostartfiles -nostdlib -std=gnu99 
 
-EXECUTABLE_NAME=hello
+EXECUTABLE_NAME=spi_sample
 INC=-I$(SDK_PATH)/bsp/include
 
 # Folders
