@@ -69,7 +69,12 @@ $(EXECUTABLE_FILES): $(COPY_FILES) $(OBJECT_FILES_C) $(OBJECT_FILES_S)
 	@$(CC) $(LDFLAGS) -o $@ $^ $(LIB) $(INC) $(LINK_OPTS)	
 	@echo "Build successful!"
 	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objdump -d $(BIN)/$(EXECUTABLE_NAME) > $(BIN)/$(EXECUTABLE_NAME).dump
-
+	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objcopy -I elf64-littleriscv -O binary  $(BIN)/$(EXECUTABLE_NAME) $(BIN)/$(EXECUTABLE_NAME).bin
+	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-bin2hex --bit-width 128 $(BIN)/$(EXECUTABLE_NAME).bin $(BIN)/$(EXECUTABLE_NAME).hex
+	@echo -n "ELF\t: $(EXECUTABLE_NAME)\nBinary\t: $(EXECUTABLE_NAME).bin\n"
+	@echo -n "Hex\t: $(EXECUTABLE_NAME).hex\nDump\t: $(EXECUTABLE_NAME).dump\nFiles are generated in $(BIN) folder.\n"
+	@echo -n "Size information\n"
+	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-size $(BIN)/$(EXECUTABLE_NAME)
 
 
 $(OBJECT_FILES_C): $(BIN)/%.o: %.c
