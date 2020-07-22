@@ -16,7 +16,11 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#define	UART_BASE		0x10000100
+#define	UART_BASE				0x10000100
+#define SPI_BASE_ADDR				0x10000600
+#define GPIO_0_BASE_ADDRESS			0x10080000
+#define GPIO_1_BASE_ADDRESS			0x10180000
+
 
 
 #define CONCATENATE(X) #X
