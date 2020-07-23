@@ -125,11 +125,11 @@ typedef struct
 				Reserved 	: 3;
 		}__attribute__((packed)) Bits;
 		US hword;
-	}Control; 							//0x00
-	UI Status; 							//0x04
+	}Control; 					//0x00
+	UI Status; 					//0x04
 	UI Baudrate;					//0x08
-	UI TxData;						//0x0c
-	UI RxData;						//0x10
+	UI TxData;					//0x0c
+	UI RxData;					//0x10
 }SPIregType;
 
 
