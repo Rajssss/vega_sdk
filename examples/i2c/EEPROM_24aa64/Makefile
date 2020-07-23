@@ -20,14 +20,15 @@ endif
 
 include $(CONFIG_PATH)
 
-#ifeq ("$(wildcard $(MDP_TOOLCHAIN64_PATH))","")
-#$(error Please install [MDP Tools] and setup the environment)
-#endif
+ifeq ("$(wildcard $(MDP_TOOLCHAIN64_PATH))","")
+$(error Please install [MDP Tools] and setup the environment)
+endif
 
-#ifeq ("$(wildcard $(MDP_SDK))","")
-#$(error Please install [MDP SDK] and setup the environment)
-#endif
+ifeq ("$(wildcard $(MDP_SDK))","")
+$(error Please install [MDP SDK] and setup the environment)
+endif
 
+UTIL_PATH=${MDP_TOOLS}/utils
 TOOLCHAIN_PATH=${MDP_TOOLCHAIN64_PATH}
 SDK_PATH=${MDP_SDK}
 CC=$(TOOLCHAIN_PATH)/riscv64-unknown-elf-gcc 
@@ -35,7 +36,7 @@ CFLAGS=-c -mcmodel=medany -march=rv64imafd -fno-builtin-printf
 LIB=
 LDFLAGS= -mcmodel=medany -nostartfiles -nostdlib -std=gnu99 
 
-EXECUTABLE_NAME=hello
+EXECUTABLE_NAME=i2c_eeprom
 INC=-I$(SDK_PATH)/bsp/include
 
 # Folders
@@ -69,7 +70,12 @@ $(EXECUTABLE_FILES): $(COPY_FILES) $(OBJECT_FILES_C) $(OBJECT_FILES_S)
 	@$(CC) $(LDFLAGS) -o $@ $^ $(LIB) $(INC) $(LINK_OPTS)	
 	@echo "Build successful!"
 	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objdump -d $(BIN)/$(EXECUTABLE_NAME) > $(BIN)/$(EXECUTABLE_NAME).dump
-
+	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objcopy -I elf64-littleriscv -O binary  $(BIN)/$(EXECUTABLE_NAME) $(BIN)/$(EXECUTABLE_NAME).bin
+	@$(UTIL_PATH)/bin2hex --bit-width 128 $(BIN)/$(EXECUTABLE_NAME).bin $(BIN)/$(EXECUTABLE_NAME).hex
+	@echo -n "ELF\t: $(EXECUTABLE_NAME)\nBinary\t: $(EXECUTABLE_NAME).bin\n"
+	@echo -n "Hex\t: $(EXECUTABLE_NAME).hex\nDump\t: $(EXECUTABLE_NAME).dump\nFiles are generated in $(BIN) folder.\n"
+	@echo -n "Size information\n"
+	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-size $(BIN)/$(EXECUTABLE_NAME)
 
 
 $(OBJECT_FILES_C): $(BIN)/%.o: %.c

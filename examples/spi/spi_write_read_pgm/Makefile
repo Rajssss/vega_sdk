@@ -28,6 +28,7 @@ ifeq ("$(wildcard $(MDP_SDK))","")
 $(error Please install [MDP SDK] and setup the environment)
 endif
 
+UTIL_PATH=${MDP_TOOLS}/utils
 TOOLCHAIN_PATH=${MDP_TOOLCHAIN64_PATH}
 SDK_PATH=${MDP_SDK}
 CC=$(TOOLCHAIN_PATH)/riscv64-unknown-elf-gcc 
@@ -70,7 +71,7 @@ $(EXECUTABLE_FILES): $(COPY_FILES) $(OBJECT_FILES_C) $(OBJECT_FILES_S)
 	@echo "Build successful!"
 	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objdump -d $(BIN)/$(EXECUTABLE_NAME) > $(BIN)/$(EXECUTABLE_NAME).dump
 	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objcopy -I elf64-littleriscv -O binary  $(BIN)/$(EXECUTABLE_NAME) $(BIN)/$(EXECUTABLE_NAME).bin
-	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-bin2hex --bit-width 128 $(BIN)/$(EXECUTABLE_NAME).bin $(BIN)/$(EXECUTABLE_NAME).hex
+	@$(UTIL_PATH)/bin2hex --bit-width 128 $(BIN)/$(EXECUTABLE_NAME).bin $(BIN)/$(EXECUTABLE_NAME).hex
 	@echo -n "ELF\t: $(EXECUTABLE_NAME)\nBinary\t: $(EXECUTABLE_NAME).bin\n"
 	@echo -n "Hex\t: $(EXECUTABLE_NAME).hex\nDump\t: $(EXECUTABLE_NAME).dump\nFiles are generated in $(BIN) folder.\n"
 	@echo -n "Size information\n"
