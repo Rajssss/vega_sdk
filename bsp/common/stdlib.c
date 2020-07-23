@@ -23,9 +23,9 @@
 static uintptr_t counters[NUM_COUNTERS];
 static char* counter_names[NUM_COUNTERS];
 
-void* memset_mdp(void* dest, int byte, size_t len);
-void* memcpy_mdp(void* dest, const void* src, size_t len);
-size_t strnlen_mdp(const char *s, size_t n);
+void* memset(void* dest, int byte, size_t len);
+void* memcpy(void* dest, const void* src, size_t len);
+size_t strnlen(const char *s, size_t n);
 #define read_const_csr(reg) ({ unsigned long __tmp; \
   asm ("csrr %0, " #reg : "=r"(__tmp)); \
   __tmp; })
@@ -106,9 +106,9 @@ static void init_tls()
   extern char _tls_data;
   extern __thread char _tdata_begin, _tdata_end, _tbss_end;
   size_t tdata_size = &_tdata_end - &_tdata_begin;
-  memcpy_mdp(thread_pointer, &_tls_data, tdata_size);
+  memcpy(thread_pointer, &_tls_data, tdata_size);
   size_t tbss_size = &_tbss_end - &_tdata_end;
-  memset_mdp(thread_pointer + tdata_size, 0, tbss_size);
+  memset(thread_pointer + tdata_size, 0, tbss_size);
 }
 /** @fn 
  * @brief 
@@ -296,7 +296,7 @@ static void vprintfmt(void (*putch)(int, void**), void **putdat, const char *fmt
       if ((p = va_arg(ap, char *)) == NULL)
         p = "(null)";
       if (width > 0 && padc != '-')
-        for (width -= strnlen_mdp(p, precision); width > 0; width--)
+        for (width -= strnlen(p, precision); width > 0; width--)
           putch(padc, putdat);
       for (; (ch = *p) != '\0' && (precision < 0 || --precision >= 0); width--) {
         putch(ch, putdat);
@@ -398,7 +398,7 @@ int sprintf(char* str, const char* fmt, ...)
  * @brief 
  * @details 
  */
-void* memcpy_mdp(void* dest, const void* src, size_t len)
+void* memcpy(void* dest, const void* src, size_t len)
 {
   if ((((uintptr_t)dest | (uintptr_t)src | len) & (sizeof(uintptr_t)-1)) == 0) {
     const uintptr_t* s = src;
@@ -417,7 +417,7 @@ void* memcpy_mdp(void* dest, const void* src, size_t len)
  * @brief 
  * @details 
  */
-void* memset_mdp(void* dest, int byte, size_t len)
+void* memset(void* dest, int byte, size_t len)
 {
   if ((((uintptr_t)dest | len) & (sizeof(uintptr_t)-1)) == 0) {
     uintptr_t word = byte & 0xFF;
@@ -450,7 +450,7 @@ size_t strlen(const char *s)
  * @brief 
  * @details 
  */
-size_t strnlen_mdp(const char *s, size_t n)
+size_t strnlen(const char *s, size_t n)
 {
   const char *p = s;
   while (n-- && *p)

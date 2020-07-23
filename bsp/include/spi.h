@@ -169,7 +169,7 @@ UC SPI_check_overrun(UC spi_number);
 void SPI_enable_intr(UC spi_number,UC tx_intr,UC rx_intr);
 US SPI_read(UC spi_number);
 void SPI_write(UC spi_number,US bData);
-void SPI_intr_handler(UC spi_number);
+int SPI_intr_handler(UC spi_number);
 void SPI_check_busy(UC spi_number);
 void SPI_set_CSAAT_high(UC spi_number);
 void SPI_set_CSAAT_low(UC spi_number);

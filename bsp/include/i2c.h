@@ -20,6 +20,7 @@
  @detail Includes software functions declarations to initialize,
  configure, write and read over I2C interface
  */
+#include "config.h"
 
 typedef unsigned char UC; //1 Byte
 typedef unsigned short US; //2 Bytes
@@ -41,7 +42,7 @@ typedef struct {
 } I2C_REG_TYPE;
 
 //Register address mapping
-#define I2CReg (*((volatile I2C_REG_TYPE *)0x10000800))
+#define I2CReg (*((volatile I2C_REG_TYPE *)I2C_BASE_ADDR))
 
 /*  Function declaration section
  *

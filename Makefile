@@ -10,7 +10,7 @@
 #--------------------------------------------------------------------    
 #See LICENSE for license details.
 
-EXAMPLES=$(shell find . -mindepth 2 -name 'Makefile'|xargs dirname)
+EXAMPLES=./examples
 
 .PHONY: default
 default: all 

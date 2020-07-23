@@ -282,7 +282,7 @@ void SPI_write(UC spi_number,US bData) {
  * @param[in] unsigned char
  * @param[Out] Returns 1 if Tx intr occurs, 2 if Tx intr occurs. 
 */
-void SPI_intr_handler(UC spi_number) {
+int SPI_intr_handler(UC spi_number) {
 	UC status = 0;
 
 	status = SPIreg(spi_number).Status;
