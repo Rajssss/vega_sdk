@@ -57,7 +57,7 @@ uintptr_t __attribute__((weak)) handle_trap(uintptr_t cause, uintptr_t epc, uint
  */
 void exit(int code)
 {
-  printf("EXIT\n\r");
+  printf("\n\rEXIT\n\r");
   while(1);
 }
 /** @fn 
@@ -66,7 +66,7 @@ void exit(int code)
  */
 void abort()
 {
-	 printf("ABORT\n\r");
+	 printf("\n\rABORT\n\r");
 }
 /** @fn 
  * @brief 
@@ -74,7 +74,7 @@ void abort()
  */
 void printstr(const char* s)
 {
-	 printf("EXIT\n\r");
+	 printf("\n\rEXIT\n\r");
 }
 /** @fn 
  * @brief 

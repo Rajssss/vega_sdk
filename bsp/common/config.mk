@@ -25,6 +25,12 @@ BSP_FILES += $(shell find $(SDK_PATH)/bsp -type f -name '*.S')
 
 COPY_FILES := $(patsubst $(SDK_PATH)/bsp/%,$(BIN)/%,$(BSP_FILES))
 
+.PHONY: default
+default: all 
+
+upload: all
+	@$(UTIL_PATH)/eth_transfer/send.sh $(PWD)/$(BIN)/$(EXECUTABLE_NAME).bin
+
 all:   $(EXECUTABLE_FILES) 
 
 clean:

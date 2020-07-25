@@ -20,5 +20,5 @@
  
 void main ()
 {
-	printf("Hello World\n");	
+	printf("\nHello World\n");	
 }
