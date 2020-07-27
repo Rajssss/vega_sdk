@@ -1,6 +1,6 @@
 /***************************************************************************
  * Project                               :  MDP
- * Name of the file                      :  gpio_driver.c
+ * Name of the file                      :  gpio.c
  * Brief Description of file             :  Driver to control the GPIO.
  * Name of Author                        :  Sreeju G R
  * Email ID                              :  sreeju@cdac.in

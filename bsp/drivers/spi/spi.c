@@ -1,6 +1,6 @@
 /***************************************************************************
  * Project                               :  MDP
- * Name of the file                      :  spi_driver.c
+ * Name of the file                      :  spi.c
  * Brief Description of file             :  Driver to control the spi device.
  * Name of Author                        :  Sreeju G R
  * Email ID                              :  sreeju@cdac.in

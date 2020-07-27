@@ -152,7 +152,8 @@ typedef union
 
 
 //Register address mapping
-#define SPIreg(i) (*((volatile SPIregType *)(SPI_BASE_ADDR + (0x100 * i))))
+#define SPIreg(i) (*((volatile SPIregType *)(SPI_BASE_ADDR(i) + (0x100 * (i % 2)))))
+
 
 
 /*  Function declaration section
