@@ -13,7 +13,7 @@
  See LICENSE for license details.
  ***************************************************/
 
- /**
+/**
  @file i2c_EEPROM.c
  @brief contains routines for I2C EEPROM interface
  @detail Includes software functions declarations to initialize,
@@ -22,7 +22,6 @@
 
 #include "i2c.h"
 #include "stdlib.h"
-
 
 /**
  @fn main
@@ -36,14 +35,14 @@
 void main() {
 
 	printf("I2C EEPROM-24aa64\n\r");
-	i2c_configure(25000000, 100000); //System clock =25MHz and I2C clock =100 kHz
-	i2c_initialize(0);
+	i2c_configure(0, 25000000, 100000); //System clock =25MHz and I2C clock =100 kHz
+	//i2c_initialize(0);
 
 	printf("I2C EEPROM Write started 1 byte \n\r");
 
-	i2c_WriteByte(0,0x01, 0x1000, 0xA0);//control code 0A,chip select 0
+	i2c_WriteByte_EEPROM(0, 0x01, 0x1000, 0xA0);//control code 0A,chip select 0
 
-	UC Byte_data = i2c_ReadByte(0,0xA0, 0xA1, 0x1000);//control code 0A,chip select 0
+	UC Byte_data = i2c_ReadByte_EEPROM(0, 0xA0, 0xA1, 0x1000);//control code 0A,chip select 0
 
 	if (Byte_data == 0x01) {
 		printf("Rxd character is 0x01 \n\r");
@@ -70,38 +69,29 @@ void main() {
  @return Void function.
 
  */
-void i2c_WriteByte(UC i2c_number,UC WBdata, US Word_Address, US Slave_Address_Wr) {
+void i2c_WriteByte_EEPROM(UC i2c_number, UC WBdata, US Word_Address,
+		US Slave_Address_Wr) {
 
-	
 	while (1) {
-		i2c_start(0,0x00,0);
+		i2c_start(0, 0x00, 0);
 
-		if (i2c_data_write(0,Slave_Address_Wr)) { //writes slave address
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit to be set
+		if (i2c_data_write(0, Slave_Address_Wr)) { //writes slave address and set EEPROM to write mode
 
-			continue;
+			continue;//received NACK
 		}
 
-		if (i2c_data_write(0,(UC) ((Word_Address >> 8)))) { //writes MSB of address
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit to be set
-
-			continue;
+		if (i2c_data_write(0, (UC) ((Word_Address >> 8)))) { //writes MSB of address
+			continue;//received NACK
 		}
 
-		if (i2c_data_write(0,(UC) (Word_Address & 0xFF))) { //writes LSB of address
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit to be set
+		if (i2c_data_write(0, (UC) (Word_Address & 0xFF))) { //writes LSB of address
 
-			continue;
+			continue;//received NACK
 		}
 
-		if (i2c_data_write(0,WBdata)) {//writes data
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit be set
+		if (i2c_data_write(0, WBdata)) { //writes data
 
-			continue;
+			continue;//received NACK
 		}
 
 		i2c_stop(0);
@@ -122,51 +112,41 @@ void i2c_WriteByte(UC i2c_number,UC WBdata, US Word_Address, US Slave_Address_Wr
  @return unsigned char data from EEPROM
 
  */
-UC i2c_ReadByte(UC i2c_number,US Slave_Address_Wr,US Slave_Address_Rd, US Word_Address) {
+UC i2c_ReadByte_EEPROM(UC i2c_number, US Slave_Address_Wr, US Slave_Address_Rd,
+		US Word_Address) {
 
 	UC rxd_data;
-	
+
 	while (1) {
-		i2c_start(0,0x00,0);
+		i2c_start(0, 0x00, 0);
 
-		if (i2c_data_write(0,Slave_Address_Wr)) { //writes slave address
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit to be set
+		if (i2c_data_write(0, Slave_Address_Wr)) { //writes slave address
 
-			continue;
+			continue;//received NACK
 		}
 
-		if (i2c_data_write(0,(UC) ((Word_Address >> 8)))) {//writes MSB of address
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit to be set
+		if (i2c_data_write(0, (UC) ((Word_Address >> 8)))) { //writes MSB of address
 
-			continue;
+			continue;//received NACK
 		}
 
-		if (i2c_data_write(0,(UC) (Word_Address & 0xFF))) { //writes LSB of address
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit to be set
+		if (i2c_data_write(0, (UC) (Word_Address & 0xFF))) { //writes LSB of address
 
-			continue;
+			continue;//received NACK
 		}
 
 		i2c_stop(0);
-		
-		i2c_start(0,0x01,1); //start sequence for reading data
-		if (i2c_data_write(0,Slave_Address_Rd)) { //write slave address
-			while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-				; //wait for stop bit to be set
 
-			continue;
+		i2c_start(0, 0x01, 1); //start sequence for reading data
+		if (i2c_data_write(0, Slave_Address_Rd)) { //write slave address and set EEPROM to read mode
+
+			continue;//received NACK
 		}
 
+		rxd_data = i2c_ReadData(0);
 
-	rxd_data = i2c_ReadData(0);
-
-	break;
-}
-while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-; //wait for stop bit to be set
+		break;
+	}
 
 }
 
