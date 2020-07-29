@@ -265,6 +265,7 @@ US SPI_read(UC spi_number)
 */
 void SPI_write(UC spi_number,US bData) {
 
+	SPI_check_busy(spi_number);
 
 	while (!(SPIreg(spi_number).Status & SPI_TX_HOLD_EMPTY_BIT));
 
