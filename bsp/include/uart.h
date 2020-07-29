@@ -3,19 +3,17 @@
 #define __UART_H
 
 /***************************************************
-* File Name			: uart.h
-* Project Code		: HDG 083
-* Project Mnemonic	: Microprocessor Development Programme
-* Product Name		: Dhruv64
-* Module Name		: UART Firmware
-* Description		: UART Routines
-* Author		: Sreenadh S., Senior Engineer
-* Revision History & 
-* Date			: First written on 04/08
-* 				: Modified on 7/19
-* Modified by whom &
-* Reasons   		: Karthika P , M Tech Intern
-***************************************************/
+ Project Name		: MDP - Microprocessor Development Project
+ Project Code		: HD083D
+ Created		: 08-Nov-2019
+ Filename		: uart.h
+ Purpose		: UART header file
+ Description		: uart functions
+ Author(s)		: Karthika P
+ Email			: karthikap@cdac.in
+
+ See LICENSE for license details.
+ ***************************************************/
 
 /*  Include section
 *
@@ -63,6 +61,7 @@ void uart_configure(UC uart_number, UL Baud_rate, UL frame_value, UL Uart_clock)
 void uart_putchar(UC uart_number, UC bTxCharacter, char *error);
 UC uart_getchar(UC uart_number, char *error);
 void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr);
+void uart_set_baud_rate(UC uart_number,UL Baud_rate, UL Uart_clock);
 
 #endif /*__UART_H*/
 

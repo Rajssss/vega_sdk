@@ -84,15 +84,17 @@ void i2c_start(UC i2c_number, UC read_length, UC Read) {
 /**
  @fn i2c_configure
  @brief Configures I2C
- @details Sets System frequency and I2C frequency for I2C operation
+ @details Configures I2C Clock period registers
+ @param[in] unsigned char(i2c_number--which i2c to be used)
  @param[in] unsigned short(System_Clock,I2C_Clock)
  @param[Out] No output parameters.
  @return nil
  */
 
-void i2c_configure(UL System_Clock, UL I2C_Clock) {
+void i2c_configure(UC i2c_number,UL System_Clock, UL I2C_Clock) {
 	I2C_CLK = I2C_Clock;
 	SYS_CLK = System_Clock;
+	i2c_initialize(i2c_number);
 }
 
 /**
@@ -115,9 +117,11 @@ UC i2c_data_write(UC i2c_number, UC Data) {
 	while ((I2CReg(i2c_number).I2C_SR0 & 0x10) != 0x10)
 
 		; //wait for Transfer complete
-	if ((I2CReg(i2c_number).I2C_SR1 & 0x01) == 0x01) //checks NACK
-
+	if ((I2CReg(i2c_number).I2C_SR1 & 0x01) == 0x01){ //checks NACK
+		while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
+						; //wait for stop bit to be set
 		return 1;
+	}
 	else
 		return 0;
 }
@@ -160,6 +164,8 @@ UC i2c_ReadData(UC i2c_number) {
 		Data = I2CReg(i2c_number).I2C_RxFF; //reading RXFF
 		//TxUartDbg(Data);
 	}
+	while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
+	; //wait for stop bit to be set
 
 	return Data;
 

@@ -51,13 +51,13 @@ typedef struct {
 
 void i2c_initialize(UC i2c_number);
 void i2c_start(UC i2c_number, UC read_length, UC Read);
-void i2c_configure(UL System_Clock, UL I2C_Clock);
+void i2c_configure(UC i2c_number,UL System_Clock, UL I2C_Clock);
 UC i2c_data_write(UC i2c_number, UC Data);
 void i2c_stop(UC i2c_number);
 UC i2c_ReadData(UC i2c_number);
 
-void i2c_WriteByte(UC i2c_number,UC WBdata, US Word_Address, US Slave_Address_Wr);
-UC i2c_ReadByte(UC i2c_number,US Slave_Address_Wr,US Slave_Address_Rd, US Word_Address);
+void i2c_WriteByte_EEPROM(UC i2c_number,UC WBdata, US Word_Address, US Slave_Address_Wr);
+UC i2c_ReadByte_EEPROM(UC i2c_number,US Slave_Address_Wr,US Slave_Address_Rd, US Word_Address);
 
 
 #endif /*__I2C_H*/
