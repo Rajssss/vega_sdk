@@ -1,48 +1,69 @@
-/*****************************************************************************
 
- Project Name		: MDP - Microprocessor Development Project
- Project Code		: HD083D
- Created		: 07-Nov-2019
- Filename		: uart.h
- Purpose		: Common interface for uart
- Description		: UART tx/rx functions
- Author(s)		: Premjith A V, Sreenadh S
- Email			: premjith@cdac.in
-    
- See LICENSE for license details.
-******************************************************************************/
+#ifndef __UART_H
+#define __UART_H
 
-
-#ifndef UART_H_
-#define UART_H_
-
-#include "config.h"
-#include "stdlib.h"
-/**
- *  Definition section
+/***************************************************
+* File Name			: uart.h
+* Project Code		: HDG 083
+* Project Mnemonic	: Microprocessor Development Programme
+* Product Name		: Dhruv64
+* Module Name		: UART Firmware
+* Description		: UART Routines
+* Author		: Sreenadh S., Senior Engineer
+* Revision History & 
+* Date			: First written on 04/08
+* 				: Modified on 7/19
+* Modified by whom &
+* Reasons   		: Karthika P , M Tech Intern
 ***************************************************/
 
-typedef struct uart_reg
+/*  Include section
+*
+*
+***************************************************/
+
+//#include "registers.h"
+
+
+/*  Defines section
+*
+*
+***************************************************/
+
+typedef unsigned char UC; //1 Byte
+typedef unsigned short US; //2 Bytes
+typedef unsigned int UI; //4 Bytes
+typedef unsigned long UL; //8 Bytes
+
+
+typedef struct
 {
-	UI   UART_DR; 	/*0x00*/
-	UI   UART_IE; 	/*0x04*/
-	UI   UART_IIR; 	/*0x08*/
-	UI   UART_LCR; 	/*0x0c*/
-	UI   Dummy10; 	/*0x10*/
-	UI   UART_LSR; 	/*0x14*/
-}UART_REG;
+	UI UART_DR;
+	UI UART_IE;
+	UI UART_IIR_FCR;
+	UI UART_LCR;
+	UI Dummy;
+	UI UART_LSR;
+}UART_REG_TYPE;
 
-/**
- *   Function declaration section
+#define UART_NO_ERROR 0
+#define UART_PARITY_ERROR -1
+#define UART_OVERRUN_ERROR -2
+#define UART_FRAMING_ERROR -3
+
+//Register address mapping
+
+#define UartReg(i) (*((volatile UART_REG_TYPE *)(UART_BASE+ (0x100 * i))))
+/*  Function declaration section
+*
 ***************************************************/
 
-void init_uart(void);
-void tx_uart(UC tx_char);
-UC rx_uart(void);
-UL get_long_int(UC noofBytes);
-UC get_hex();
-UL get_decimal(UC noOfDigits);
+void uart_init(UC uart_number);
+void uart_configure(UC uart_number, UL Baud_rate, UL frame_value, UL Uart_clock);
+void uart_putchar(UC uart_number, UC bTxCharacter, char *error);
+UC uart_getchar(UC uart_number, char *error);
+void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr);
 
-#define uart_regs (*((volatile UART_REG *)(UART_BASE)))
+#endif /*__UART_H*/
 
-#endif /* UART_H_ */
+

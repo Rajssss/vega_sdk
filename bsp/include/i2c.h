@@ -8,7 +8,7 @@
  Created		: 08-Nov-2019
  Filename		: i2c.h
  Purpose		: I2C Firmware header file
- Description	: I2C functions
+ Description		: I2C functions
  Author(s)		: Karthika P
  Email			: karthikap@cdac.in
 
@@ -42,22 +42,23 @@ typedef struct {
 } I2C_REG_TYPE;
 
 //Register address mapping
-#define I2CReg (*((volatile I2C_REG_TYPE *)I2C_BASE_ADDR))
+#define I2CReg(i) (*((volatile I2C_REG_TYPE *)(I2C_BASE_ADDR+ (0x100 * i))))
+
 
 /*  Function declaration section
  *
  ***************************************************/
 
-void i2c_initialize(void);
-void i2c_start(UC read_length);
+void i2c_initialize(UC i2c_number);
+void i2c_start(UC i2c_number, UC read_length, UC Read);
 void i2c_configure(UL System_Clock, UL I2C_Clock);
-int i2c_data_write(UC Data);
-void i2c_stop(void);
-UC i2c_ReadData(void);
+UC i2c_data_write(UC i2c_number, UC Data);
+void i2c_stop(UC i2c_number);
+UC i2c_ReadData(UC i2c_number);
 
+void i2c_WriteByte(UC i2c_number,UC WBdata, US Word_Address, US Slave_Address_Wr);
+UC i2c_ReadByte(UC i2c_number,US Slave_Address_Wr,US Slave_Address_Rd, US Word_Address);
 
-void i2c_WriteByte(UC WBdata, US Word_Address, US Slave_Address_Wr);
-UC i2c_ReadByte(US Slave_Address_Wr,US Slave_Address_Rd, US Word_Address);
 
 #endif /*__I2C_H*/
 

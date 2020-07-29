@@ -4,268 +4,159 @@
  Project Code		: HD083D
  Created		: 07-Nov-2019
  Filename		: uart.c
- Purpose		: Common interface for uart
- Description		: UART tx/rx functions
- Author(s)		: Premjith A V, Sreenadh S
- Email			: premjith@cdac.in
-    
+ Purpose		: UART Firmware
+ Description		: UART Firmware
+ Author(s)		: Karthika P
+ Email			: karthikap@cdac.in
+
  See LICENSE for license details.
-******************************************************************************/
+ ******************************************************************************/
 
+/**
+ @file uart.c
+ @brief Contains routines for UART interface
+ @detail Includes software functions to initialize,
+ configure, transmit and receive over UART
+ */
+/*  Include section
+ *
+ *
+ ***************************************************/
+
+
+#include "stdlib.h"
+#include "config.h"
 #include "uart.h"
-
-/**************************************************
- * Function name	: void init_uart(void)
- * returns		    : Nil
- * Created by		: Sreenadh.S
- * Date created		: 04/01/2007
- * Description		: Initialize UART.
- * Notes			: To initialize UART - Baud Rate = 115200 Clock 25MHz
- *                     	8 Data bits, 1 Stop bit, no Parity,disable DR intrpt &
- *                     	THRE intrpt
- **************************************************/
-/** @fn 
- * @brief 
- * @details 
- */
-void init_uart(void) {
-	uart_regs.UART_LCR = 0x83; //Divisor latch enabled
-	uart_regs.UART_DR = 0x0e; //0x0b-20mHz,0x02-5mHz,0x10-30mHz;//0x0e-25mHz;0x0f-29mHz,0x1b-50mHz; 0x15-40mHz ;0x28-75mHz  //Divisor LSB
-	uart_regs.UART_IE = 0x00; //Divisor MSB
-	uart_regs.UART_LCR = 0x03; //Divisor latch disabled, stop-bits = 1, parity = none, data-bits = 8
-	uart_regs.UART_IE = 0x00; //Interrupts disabled
-	__asm__ __volatile__ ("fence");
+/**
+@fn uart_init
+@brief default baud rate and frame initialization
+@details To initialize UART: Baud Rate = 115200 Clock 25MHz
+Calculate Divisor(Divisor = Input frequency / (Baud rate X 16) )
+for the baud rate  and configure uart register. UART frame is initialized by
+setting the data bits,parity bits and stop bits
+8 Data bits, 1 Stop bit, no Parity,
+Disable DR interrupt & THRE interrupt
+@param[in] unsigned char(uart_number)
+@param[Out] No ouput parameter.
+@return Void function.
+*/
+void uart_init(UC uart_number) {
+	UartReg(uart_number).UART_LCR = 0x83;
+	UartReg(uart_number).UART_DR = 0x0e; //LSB
+	UartReg(uart_number).UART_IE = 0x00; //MSB
+	UartReg(uart_number).UART_LCR = 0x03;
+	UartReg(uart_number).UART_IE = 0x00;
 }
 
-/**************************************************
- * Function name	: void tx_uart(UC tx_char)
- *    returns		: Nil
- * Tx_char           : Character to Tx
- * Created by		: Sreenadh.S
- * Date created		: 04/01/2007
- * Description		: Tx 1 character through UART
- * Notes			:
- *************************************************/
-/** @fn 
- * @brief 
- * @details 
+/**
+@fn uart_configure
+@brief Baud rate and Frame initialization
+@details Calculate Divisor(Divisor = Input frequency / (Baud rate X 16) )
+for the baud rate  and configure uart register. UART frame is initialized by
+setting the data bits,parity bits and stop bits
+@param[in] unsigned char(uart_number)
+@param[in] unsigned long(Baud_rate)
+@param[in] unsigned long(frame_value)
+@param[in] unsigned long(Uart_clock)
+@param[Out] No ouput parameter.
+@return Void function.
+
  */
-void tx_uart(UC tx_char) {
-	UC lsr;
 
-	uart_regs.UART_DR = tx_char;
-	__asm__ __volatile__ ("fence");
-	do {
-		lsr = uart_regs.UART_LSR;
-		__asm__ __volatile__ ("fence");
-		lsr = lsr & 0x20;
-	} while (lsr != 0x20);
-}
-
-/**************************************************
- * Function name	: UC Tx_uart(void)
- *    returns		: Nil
- * Tx_char           : Character to Rx
- * Created by		: Sreenadh.S
- * Date created		: 04/01/2007
- * Description		: Rx 1 character through UART
- * Notes			:
- **************************************************/
-/** @fn 
- * @brief 
- * @details 
- */
-UC rx_uart(void) {
-	UC lsr, Rx_char;
-
-	do {
-		lsr = uart_regs.UART_LSR;
-		__asm__ __volatile__ ("fence");
-	} while ((lsr & 1) == 0);
-
-	Rx_char = uart_regs.UART_DR;
+void uart_configure(UC uart_number, UL Baud_rate, UL frame_value, UL Uart_clock) {
+	UC divisor;
+	divisor = (Uart_clock / (Baud_rate * 16));
+	UartReg(uart_number).UART_LCR = frame_value; //0x83
+	UartReg(uart_number).UART_DR = divisor & 0xFF; //LSB
+	UartReg(uart_number).UART_IE = (divisor >> 0x08) & 0xFF; //MSB(right shift)
+	UartReg(uart_number).UART_LCR &= 0x7f; //DLAB bit to zero
+	UartReg(uart_number).UART_IE = 0x01;
+	UartReg(uart_number).UART_IIR_FCR = 0x00;
 	__asm__ __volatile__ ("fence");
 
-	//uart_regs.UART_LSR &= ~0x1;  //For emulation only FIXME
-	return Rx_char;
 }
 
-/**************************************************
- * Function name	: get_decimal()
- * returns		    : Nil
- * Created by		: Sreeju.GR
- * Date created		: 22/11/2018
- * Description		:
- * Notes			:
- **************************************************/
- /** @fn 
- * @brief 
- * @details 
+/**
+ @fn uart_putchar
+ @brief 1 byte character transmission
+ @details Transmit 1 character through uart.Proceeds only when transmitter is idle
+ @param[in] unsigned char(uart_number-- which uart to be used)
+ @param[in] unsigned char(bTxCharacter--character to be transmitted)
+ @param[Out] unsigned char *error : if parity error -1, if Overrun error -2, if framing error -3
+ no error 0
+ @return Void function.
+
  */
-UL get_decimal(UC noOfDigits) {
-	UC i, rx = 0, ascii[16];
-	;
-	UL number = 0, cnt = 0, temp = 1;
 
-	for (i = 1; i < noOfDigits; i++)
-		temp *= 10;
+void uart_putchar(UC uart_number, UC bTxCharacter, char *error) {
 
-	i = 0;
-	while (1) {
+	while ((UartReg(uart_number).UART_LSR & 0x20) != 0x20
+			&& (UartReg(uart_number).UART_LSR & 0x40) != 0x40)
+		; //checks whether transmitter id idle and transmitter holding register is empty , to start transmitting
+	UartReg(uart_number).UART_DR = bTxCharacter;
+	__asm__ __volatile__ ("fence");
+	while ((UartReg(uart_number).UART_LSR & 0x20) != 0x20)
+		;
+	if ((UartReg(uart_number).UART_LSR & 0x04) == 0x04) {
+			//printf("ParityError\n\r");
+			*error = UART_PARITY_ERROR;
+		} else if ((UartReg(uart_number).UART_LSR & 0x02) == 0x02) {
+			//printf("OverrunError\n\r"); //data in buffer is not read before next character was transfered and in FIFO, exceeds the trigger level
+			*error = UART_OVERRUN_ERROR;
+		} else if ((UartReg(uart_number).UART_LSR & 0x08) == 0x08) {
+			//printf("FrammingError\n\r"); //frame does not match with the settings
+			*error = UART_FRAMING_ERROR;
+		} else
+			*error = UART_NO_ERROR; //no error
+}
+/**
+ @fn uart_getchar
+ @brief 1 byte character reception
+ @details Receives 1 character thcrough uart
+ @param[in] unsigned char(uart_number)
+ @param[Out] unsigned char *error : if parity error -1, if Overrun error -2,
+ if framing error -3 ,no error 0
+ @return unsigned char Rxd_data--data received
 
-		if (i < noOfDigits) {
-			while (1) {
-				rx = rx_uart();
-				if (rx >= '0' && rx <= '9') {
-					tx_uart(rx);
-					ascii[i] = rx;
-					break;
-				}
-				if (rx == '\b') {
-					if (i > 0) {
-						tx_uart(rx);
-						tx_uart(' ');
-						tx_uart(rx);
-						i--;
-					}
-					continue;
-				}
+ */
 
-			}
-			i++;
+UC uart_getchar(UC uart_number, char *error) {
+	UC Rxd_data;
 
-		} else if (i == noOfDigits) {
-			rx = rx_uart();
-			if (rx == '\r') {
-				break;
-			} else if (rx == '\b') {
-				tx_uart(rx);
-				tx_uart(' ');
-				tx_uart(rx);
-				i--;
-				continue;
-			}
-		}
-	}
-	for (i = 0; i < noOfDigits; i++) {
-		ascii[i] -= '0'; //ascii
-		number = number + (temp * ascii[i]);
-		temp = temp / 10;
-	}
-	return number;
+	while ((UartReg(uart_number).UART_LSR & 0x01) != 0x01)
+		; //waiting for data
+	Rxd_data = UartReg(uart_number).UART_DR; //
+
+	if ((UartReg(uart_number).UART_LSR & 0x04) == 0x04) {
+		//printf("ParityError\n\r");
+		*error = UART_PARITY_ERROR;
+	} else if ((UartReg(uart_number).UART_LSR & 0x02) == 0x02) {
+		//printf("OverrunError\n\r"); //data in buffer is not read before next character was transfered and in FIFO, exceeds the trigger level
+		*error = UART_OVERRUN_ERROR;
+	} else if ((UartReg(uart_number).UART_LSR & 0x08) == 0x08) {
+		//printf("FrammingError\n\r"); //frame does not match with the settings
+		*error = UART_FRAMING_ERROR;
+	} else
+		*error = UART_NO_ERROR; //no error
+
+	return Rxd_data;
 }
 
-/**************************************************
- * Function name	: get_long_int()
- * returns		    : Nil
- * Created by		: Sreeju.GR
- * Date created		: 22/11/2018
- * Description		:
- * Notes			:
- **************************************************/
- /** @fn 
- * @brief 
- * @details 
+/**
+@fn uart_intr_enable
+@brief enable uart interrupts
+@details enable the uart tx and rx interrupt
+@param[in] unsigned char(uart_number)
+@param[in] unsigned char(tx_intr)
+@param[in] unsigned char(rx_intr)
+@param[in] unsigned char(rxd_data_avail_intr)
+@param[Out] No ouput parameter.
+@return Void function.
  */
-UL get_long_int(UC noofBytes) {
-	UC i, rx = 0, temp[16];
-	UI hex_val = 0;
-	i = 0;
-	while (1) {
-		if (i < noofBytes) {
-			/*if ((noofBytes == 4) || (noofBytes == 2)) {
-			 if (i > 0)
-			 Tx_uart('-');
-			 }*/
-			rx = get_hex();
-			if (rx == '\b') {
-				if (i > 0) {
-					tx_uart(rx);
-					tx_uart(' ');
-					tx_uart(rx);
-					tx_uart(rx);
-					tx_uart(' ');
-					tx_uart(rx);
-					i--;
-				}
-				continue;
-			}
-			//temp <<= 8;
-			//temp = temp + rx;
-			temp[i] = rx;
 
-			i++;
-		} else if (i == noofBytes) {
-			rx = rx_uart();
-			if (rx == '\r') {
-				break;
-			} else if (rx == '\b') {
-				tx_uart(rx);
-				tx_uart(' ');
-				tx_uart(rx);
-				tx_uart(rx);
-				tx_uart(' ');
-				tx_uart(rx);
-				i--;
-				continue;
-			}
-		}
-	}
+void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr) {
 
-	for (i = 0; i < noofBytes; i++) {
-		hex_val <<= 8;
-		hex_val |= temp[i];
-	}
-
-	return hex_val;
-}
-
-/************************************************************
- * Function name		: UC get_hex()
- * returns		    : 1 byte unsigned character (number).
- * Date created		: 22/07/2009
- * Description		: To get hex value and display it to HT.
- *************************************************************/
-/** @fn 
- * @brief 
- * @details 
- */
-UC get_hex() {
-	unsigned char number = 0, dig1, dig2, count = 2, rx;
-	while (count) {
-		rx = rx_uart();
-		if (rx == '\b') {
-			if (count < 2) {
-				tx_uart(rx);
-				tx_uart(' ');
-				tx_uart(rx);
-				count++;
-				continue;
-			} else
-				return rx;
-		}
-
-		if ((rx >= 0x30) && (rx <= 0x39)) {
-			tx_uart(rx);
-			rx = rx - 0x30;
-		} else if ((rx >= 'A') && (rx <= 'F')) {
-			tx_uart(rx);
-			rx = rx - 0x37;
-		} else if ((rx >= 'a') && (rx <= 'f')) {
-			tx_uart(rx);
-			rx = rx - 0x57;
-		}
-
-		else
-			continue;
-		if (count == 2)
-			dig1 = rx;
-		else
-			dig2 = rx;
-		count--;
-	}
-	number = (dig1 << 4);
-	number |= dig2;
-	return number;
+	UartReg(uart_number).UART_IE = ((rx_intr << 2) | (tx_intr << 1));
+	__asm__ __volatile__ ("fence");
 }
 
