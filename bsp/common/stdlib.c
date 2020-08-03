@@ -140,7 +140,7 @@ int putchar(int ch)
  * @brief 
  * @details 
  */
-void printhex(uint64_t x)
+void printhex(UL x)
 {
   char str[17];
   int i;

@@ -19,12 +19,12 @@
  @detail Includes software functions to initialize,
  configure, write and read over I2C interface
  */
-
+#include "stdlib.h"
 #include "i2c.h"
 #include "config.h"
 
-US SYS_CLK;
-US I2C_CLK;
+UL SYS_CLK;
+UL I2C_CLK;
 
 /**
  @fn i2c_initialize
@@ -41,15 +41,19 @@ void i2c_initialize(UC i2c_number) {
 	__asm__ __volatile__ ("fence");
 	US CH = SYS_CLK / (2 * I2C_CLK);
 	I2CReg(i2c_number).I2C_CHL = ((UC) (CH & 0xFF));
-
+//	printf("CHL is %x",(I2CReg(i2c_number).I2C_CHL));
+	//	printf("\n\r");
 	I2CReg(i2c_number).I2C_CHH = (UC) ((CH >> 8) & 0xFF);
-
+	//printf("CHH is %x",(I2CReg(i2c_number).I2C_CHH));
+		//printf("\n\r");
 	US CHH = SYS_CLK / (4 * I2C_CLK);
 
 	I2CReg(i2c_number).I2C_CHHL = ((UC) (CHH & 0xFF));
-
+	//printf("CHHL is %x",(I2CReg(i2c_number).I2C_CHHL));
+		//printf("\n\r");
 	I2CReg(i2c_number).I2C_CHHH = (UC) ((CHH >> 8) & 0xFF);
-
+	//printf("CHHH is %x",(I2CReg(i2c_number).I2C_CHH));
+		//printf("\n\r");
 	__asm__ __volatile__ ("fence");
 }
 
@@ -71,14 +75,20 @@ void i2c_start(UC i2c_number, UC read_length, UC Read) {
 	while (((I2CReg(i2c_number).I2C_SR0 & 0x08) != 0x08)
 			|| ((I2CReg(i2c_number).I2C_SR0 & 0x10) != 0x10))
 		; //checks for transmission complete and TxFifo empty
-
+	//printf("txff empty\n\r");
 	if (Read == 1)
-		I2CReg(i2c_number).I2C_CR = ((read_length << 1) | 0x01); //Set Start bit for read;read_length=1 byte
+		I2CReg(i2c_number).I2C_CR = ((read_length << 2) | 0x01); //Set Start bit for read;read_length=1 byte
 	else
 		I2CReg(i2c_number).I2C_CR = 0x01; //Set Start bit for write;
+	//printf("CR is %x",(I2CReg(i2c_number).I2C_CR));
+	//printf("\n\r");
+	//printf("SR is %x",(I2CReg(i2c_number).I2C_SR0));
+
+		//printf("\n\r");
+		__asm__ __volatile__ ("fence");
 	while ((I2CReg(i2c_number).I2C_SR0 & 0x01) != 0x01)
 		; //check start sequence initiated
-	__asm__ __volatile__ ("fence");
+
 }
 
 /**
@@ -110,16 +120,19 @@ void i2c_configure(UC i2c_number,UL System_Clock, UL I2C_Clock) {
 UC i2c_data_write(UC i2c_number, UC Data) {
 	while ((I2CReg(i2c_number).I2C_SR0 & 0x04) == 0x04)
 		; //waits if TxFF full
-
+	//printf("txff ready\n\r");
 	I2CReg(i2c_number).I2C_TxFF = Data;
 	__asm__ __volatile__ ("fence");
 
 	while ((I2CReg(i2c_number).I2C_SR0 & 0x10) != 0x10)
 
 		; //wait for Transfer complete
+	//printf("transmission complete\n\r");
 	if ((I2CReg(i2c_number).I2C_SR1 & 0x01) == 0x01){ //checks NACK
+
 		while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
-						; //wait for stop bit to be set
+				; //wait for stop bit to be set
+		printf("NACK rxd and stop bit set\n\r");
 		return 1;
 	}
 	else
@@ -162,7 +175,8 @@ UC i2c_ReadData(UC i2c_number) {
 
 	if ((I2CReg(i2c_number).I2C_SR0 & 0x40) != 0x40) { //checking RXfifo empty
 		Data = I2CReg(i2c_number).I2C_RxFF; //reading RXFF
-		//TxUartDbg(Data);
+		printf("data is %x",Data);
+			printf("\n\r");
 	}
 	while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
 	; //wait for stop bit to be set

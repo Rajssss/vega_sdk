@@ -23,7 +23,7 @@ typedef unsigned long  UL;	//4 Bytes
 typedef unsigned short US;	//2 Bytes
 
 int printf(const char* fmt, ...);
-
+int putchar(int ch);
 
 
 #endif /* INCLUDE_STDLIB_H_ */

@@ -58,7 +58,7 @@ UC i2c_ReadData(UC i2c_number);
 
 void i2c_WriteByte_EEPROM(UC i2c_number,UC WBdata, US Word_Address, US Slave_Address_Wr);
 UC i2c_ReadByte_EEPROM(UC i2c_number,US Slave_Address_Wr,US Slave_Address_Rd, US Word_Address);
-
+void i2c_WriteMultiChar(UL no_of_bytes);
 
 #endif /*__I2C_H*/
 
