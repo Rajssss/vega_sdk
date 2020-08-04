@@ -12,7 +12,7 @@
  See LICENSE for license details.
 ******************************************************************************/
 
-#include "debug_uart.h"
+#include <include/debug_uart.h>
 
 /**************************************************
  * Function name	: void init_uart(void)

@@ -22,9 +22,9 @@
 
 ***************************************************************************/
 
-#include "stdlib.h"
-#include "timer.h"
-#include "config.h"
+#include <include/stdlib.h>
+#include <include/timer.h>
+#include <include/config.h>
 
 
 

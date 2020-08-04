@@ -23,7 +23,6 @@
 ***************************************************/
 
 #include "stdlib.h"
-#include "config.h"
 #include "gpio.h"
 
 

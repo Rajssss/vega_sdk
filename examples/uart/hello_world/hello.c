@@ -17,8 +17,8 @@
 /** @fn main
  * @brief hello world program
  */
- 
-void main ()
+
+int main ()
 {
-	printf("\nHello World\n");	
+	printf("\nHello World\n");		
 }

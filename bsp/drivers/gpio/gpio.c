@@ -22,9 +22,9 @@
 
 ***************************************************************************/
 
-#include "stdlib.h"
-#include "gpio.h"
-#include "config.h"
+#include <include/stdlib.h>
+#include <include/gpio.h>
+#include <include/config.h>	//for datatypes
 
 
 /** @fn GPIO_read_pin

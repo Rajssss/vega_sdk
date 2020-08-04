@@ -10,28 +10,32 @@
 #--------------------------------------------------------------------    
 #See LICENSE for license details.
  
-#-----------------------------------------
-#           	Configurations            #
-#-----------------------------------------
-CONFIG_PATH=~/.config/mdp-tools/settings.mk
+#+++++++++++++++++++++++
+# Configurations        
+#+++++++++++++++++++++++
+# Include the BSP settings
+
+CONFIG_PATH=~/.config/vega-tools/settings.mk
 ifeq ("$(wildcard $(CONFIG_PATH))","")
-$(error Please install [MDP SDK]/[MDP Tools] and setup the environment)
+$(error Please install [VEGA SDK]/[VEGA Tools] and setup the environment)
 endif
 
 include $(CONFIG_PATH)
 
-ifeq ("$(wildcard $(MDP_TOOLCHAIN64_PATH))","")
-$(error Please install [MDP Tools] and setup the environment)
+ifeq ("$(wildcard $(VEGA_TOOLCHAIN_PATH))","")
+$(error Please install [VEGA Tools] and setup the environment)
 endif
 
-ifeq ("$(wildcard $(MDP_SDK))","")
-$(error Please install [MDP SDK] and setup the environment)
+ifeq ("$(wildcard $(VEGA_SDK))","")
+$(error Please install [VEGA SDK] and setup the environment)
 endif
-SDK_PATH=${MDP_SDK}
-#-----------------------------------------
-#           	Executable name           #
-#-----------------------------------------
-EXECUTABLE_NAME=gpio_sample
+SDK_PATH=${VEGA_SDK}
+
+#+++++++++++++++++++++++
+# Executable name
+#+++++++++++++++++++++++
+EXECUTABLE_NAME=gpio_write_read_pgm
+
 
 include $(SDK_PATH)/bsp/common/config.mk
-
+	
