@@ -42,7 +42,7 @@ set_property "VEGA_MACHINE" "CDAC"
 
 echo "VEGA SDK Environment added"
 
-cd ./bsp && ./clean.sh > /dev/null
+cd ./bsp && autoreconf -f -i && ./clean.sh > /dev/null
 cd ..
 make clean > /dev/null
 
