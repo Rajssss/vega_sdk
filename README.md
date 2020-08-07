@@ -1,4 +1,5 @@
 # Vega SDK
+[![pipeline status](https://gitlab.com/cdac-vega/vega-sdk/badges/master/pipeline.svg)](https://gitlab.com/cdac-vega/vega-sdk/-/commits/master)
 
 The Vega SDK contains the following peripheral APIs, example programs for baremetal development.
 ### Peripheral APIs
