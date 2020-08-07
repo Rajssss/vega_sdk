@@ -22,21 +22,24 @@
 
 ***************************************************************************/
 
+
 #include <include/stdlib.h>
 #include <include/gpio.h>
-#include <include/config.h>	//for datatypes
+#include <include/config.h>
 
 
 /** @fn GPIO_read_pin
- * @brief  Read GPIO pin value.
- * @details Read the GPIO pin value by setting the direction as INPUT.
- * @warning 
- * @param[in] unsigned char, unsigned short
- * @param[Out] Pin value as 16 bit data.
+  @brief  Read GPIO pin value.
+  @details Read the GPIO pin value by setting the direction as INPUT.
+  @warning 
+  @param[in] unsigned short pin_no
+  @param[Out] Pin value as 16 bit data.
 */
-US GPIO_read_pin(UC gpio_number,US pin_no) {
+US GPIO_read_pin(US pin_no) {
 
+	UC gpio_number = 0;
 	US dir_data = 0;
+	US bit_position = 0;
 	volatile US *gpio_0_dir_addr = (volatile US *)(GPIO_0_BASE_ADDRESS +0x40000) ;
 	volatile US *gpio_1_dir_addr = (volatile US *)(GPIO_1_BASE_ADDRESS +0x40000) ;
 
@@ -44,76 +47,97 @@ US GPIO_read_pin(UC gpio_number,US pin_no) {
 	volatile US *gpio_0_data, *gpio_1_data;
 	US read_data = 0;
 
+	if(pin_no <= 15)
+		gpio_number = 0;
+	else	
+		gpio_number = 1;
+
+
 	if(gpio_number == 0)
 	{
-		
+		bit_position = (1 << pin_no);
 		dir_data =  *gpio_0_dir_addr; 		// Address of the direction register.
-		dir_data &= ~(pin_no);			//Clearing a bit configures the pin to be INPUT
+		dir_data &= ~(bit_position);			//Clearing a bit configures the pin to be INPUT
 		*gpio_0_dir_addr = dir_data;		// Data written to direction register.
+		__asm__ __volatile__ ("fence");
 
 		gen_gpio_0_addr = GPIO_0_BASE_ADDRESS;
-		gen_gpio_0_addr+=(pin_no << 2);
+		gen_gpio_0_addr+=(bit_position << 2);
 		gpio_0_data = (US *)gen_gpio_0_addr;
 		read_data = *gpio_0_data; 			// Read data from the address.
+		
 	}
 	else if(gpio_number == 1)
 	{
-		
+		pin_no = (pin_no - 16);
+		bit_position = (1 << pin_no);
 		dir_data =  *gpio_1_dir_addr;				// Address of the direction register.
-		dir_data &= ~(pin_no);	
+		dir_data &= ~(bit_position);	
 		*gpio_1_dir_addr = dir_data;					// Data written to direction register.
-
+		__asm__ __volatile__ ("fence");
 
 		gen_gpio_1_addr = GPIO_1_BASE_ADDRESS;
-		gen_gpio_1_addr+=(pin_no << 2);
+		gen_gpio_1_addr+=(bit_position << 2);
 		gpio_1_data = (US *)gen_gpio_1_addr;
 		read_data = *gpio_1_data;				// Read data from the address.
 	}
 	__asm__ __volatile__ ("fence");
 
-	return (read_data & pin_no) ;   
+	if(read_data)
+		return 1; // GPIO pin is High.
+	else
+		return 0; // GPIO pin is Low.
 }
 
 /** @fn GPIO_write_pin
  * @brief  Write GPIO pin value.
  * @details Write the GPIO pin value by setting the direction as OUTPUT.
  * @warning 
- * @param[in] unsigned char, unsigned short, unsigned short
+ * @param[in] unsigned short, unsigned short
  * @param[Out] No output parameter.
 */
-void GPIO_write_pin(UC gpio_number,US pin_no,US data) {
-
+void GPIO_write_pin(US pin_no,US data) {
+	
+	UC gpio_number = 0;
 	US dir_data = 0;
+	US bit_position = 0;
 	volatile US *gpio_0_dir_addr = (volatile US *)(GPIO_0_BASE_ADDRESS +0x40000) ;
 	volatile US *gpio_1_dir_addr = (volatile US *)(GPIO_1_BASE_ADDRESS +0x40000) ;
 
 	UL gen_gpio_0_addr,gen_gpio_1_addr;
 	volatile US *gpio_0_data, *gpio_1_data;
 
+	if(pin_no <= 15)
+		gpio_number = 0;
+	else	
+		gpio_number = 1;
 
 	if(gpio_number == 0)
 	{
-		
+		bit_position = (1 << pin_no);	
 		dir_data =  *gpio_0_dir_addr;	 		// Address of the direction register.
-		dir_data |= pin_no;				//Setting a bit configures the pin to be OUTPUT
+		dir_data |= bit_position;				//Setting a bit configures the pin to be OUTPUT
 		*gpio_0_dir_addr = dir_data;			// Data written to direction register.
+		__asm__ __volatile__ ("fence");
 
 		gen_gpio_0_addr = GPIO_0_BASE_ADDRESS;
-		gen_gpio_0_addr|=(pin_no << 2);
+		gen_gpio_0_addr|=(bit_position << 2);
 		gpio_0_data = (US *)gen_gpio_0_addr;
-		*gpio_0_data = data;			// Write data to the address.
+		*gpio_0_data = (data << pin_no);			// Write data to the address.
 	}
 	else if(gpio_number == 1)
 	{
-		
+		pin_no = (pin_no - 16);
+		bit_position = (1 << pin_no);
 		dir_data =  *gpio_1_dir_addr;				// Address of the direction register.
-		dir_data |= pin_no;									//Setting a bit configures the pin to be OUTPUT
+		dir_data |= bit_position;									//Setting a bit configures the pin to be OUTPUT
 		*gpio_1_dir_addr = dir_data;					// Data written to direction register.
+		__asm__ __volatile__ ("fence");
 
 		gen_gpio_1_addr = GPIO_1_BASE_ADDRESS;
-		gen_gpio_1_addr|=(pin_no << 2);
+		gen_gpio_1_addr|=(bit_position << 2);
 		gpio_1_data = (US *)gen_gpio_1_addr;
-		*gpio_1_data = data;			// Write data to the address.
+		*gpio_1_data = (data << pin_no);			// Write data to the address.
 
 
 	}

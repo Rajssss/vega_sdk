@@ -1,0 +1,5 @@
+drivers/gpio/gpio.o: drivers/gpio/gpio.c include/stdlib.h include/gpio.h \
+ include/config.h
+include/stdlib.h:
+include/gpio.h:
+include/config.h:

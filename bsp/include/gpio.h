@@ -41,7 +41,7 @@
 *
 ***************************************************/
 
-US GPIO_read_pin(UC gpio_number,US pin_no);
-void GPIO_write_pin(UC gpio_number,US pin_no,US data);
+US GPIO_read_pin(US pin_no);
+void GPIO_write_pin(US pin_no,US data);
 
 #endif /* GPIO_DRIVER_H_ */

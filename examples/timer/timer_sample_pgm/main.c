@@ -41,13 +41,13 @@ void main ()
 	while(1)
 	{
 		intr = timer_put_delay(TIMER_0,0x200);			
-		printf("TIMER 0 intr occurred");
+		printf("\n TIMER 0 intr occurred");
 			
 		intr = timer_put_delay(TIMER_1,0x350);
-		printf("TIMER 1 intr occurred");
+		printf("\n TIMER 1 intr occurred");
 	
 		intr = timer_put_delay(TIMER_2,0x500);	
-		printf("TIMER 2 intr occurred");			
+		printf("\n TIMER 2 intr occurred");			
 	}
 	
 }

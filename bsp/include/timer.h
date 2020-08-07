@@ -8,7 +8,8 @@
 *
 ***************************************************/
 
-
+#include "stdlib.h"	//for datatypes
+#include "config.h"	//for datatypes
 
 /*  Defines section
 *

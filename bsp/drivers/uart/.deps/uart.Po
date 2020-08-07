@@ -1,0 +1,5 @@
+drivers/uart/uart.o: drivers/uart/uart.c include/stdlib.h \
+ include/config.h include/uart.h
+include/stdlib.h:
+include/config.h:
+include/uart.h:
