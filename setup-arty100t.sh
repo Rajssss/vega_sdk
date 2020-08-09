@@ -35,7 +35,7 @@ get_property()
 }
 
 
-echo "Setting up VEGA SDK environmet"
+echo "Setting up VEGA SDK Environment"
 
 set_property "VEGA_SDK" "$VEGA_SDK"
 set_property "VEGA_MACHINE" "ARTY100"

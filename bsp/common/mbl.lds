@@ -23,7 +23,7 @@ SECTIONS
 {
 
   /* text: test code section */
-  . = 0x80000000;/*SOC ROM start address*/
+  . = 0x20000;/*SOC ROM start address*/
   .text.init : { *(.text.init) }
 
   .text : 

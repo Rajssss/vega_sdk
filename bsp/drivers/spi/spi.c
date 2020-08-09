@@ -23,19 +23,18 @@
 ***************************************************************************/
 
 #include <include/stdlib.h>
-#include <include/config.h>
 #include <include/spi.h>
-#include <include/uart.h>
+#include <include/config.h>
 
 SPIcntrlRegType gSPItransfer;
 
 
-/** @fn SPI_init
- * @brief Initialize SPI.
- * @details Initialise SPI with the default setting.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] No output parameter 
+/*@fn SPI_init
+  @brief Initialize SPI.
+  @details Initialise SPI with the default setting.
+  @warning 
+  @param[in]  unsigned char spi_number: Denotes the selected SPI.
+  @param[Out] No output parameter 
 */
 void SPI_init(UC spi_number) {
 
@@ -52,7 +51,7 @@ void SPI_init(UC spi_number) {
 	gSPItransfer.Bits.Mode = SPI_MODE_0;
 	gSPItransfer.Bits.DataOrder = MSB;
 	gSPItransfer.Bits.Periph = 0;
-	gSPItransfer.Bits.PeriphCS = 1;
+	gSPItransfer.Bits.PeriphCS = 0;
 
 
 	SPIreg(spi_number).Control.hword = gSPItransfer.Value;	// Update value to register
@@ -60,18 +59,10 @@ void SPI_init(UC spi_number) {
 	return;
 }
 
-/**************************************************
- * Function name	   : SPI_config
- * returns		   : Nil
- * Created by		   : Sreeju GR.
- * Date created		   : 21/05/2012
- * Description		   : Customise the SPI init setting.
- * Notes		   : Read the SPI control reg details in manual to set the required value.
- **************************************************/
 
-/** @fn SPI_init
- * @brief Customise the SPI init setting.
- * @details Read the details below.
+/* @fn SPI_config
+ @brief Customise the SPI init setting.
+ @details Read the details below.
  
 SPI Control word details
 ************************
@@ -106,10 +97,10 @@ SPI Clock configuration Modes
 -------------------------------------------------
 | SPI-mode   |  CPOL(bit - 5)	|  CPHA(bit - 4)|	
 -------------------------------------------------
-|   0	     |	    0		|	0	|
-|   1	     |	    0		|	1	|
-|   2        |	    1		|	0	|
-|   3	     |	    1		|	1	|
+|   0	     |	    0		    |	0			|
+|   1	     |	    0			|	1			|
+|   2        |	    1			|	0			|
+|   3	     |	    1			|	1			|
 -------------------------------------------------
 
 
@@ -121,15 +112,17 @@ SPI Clock configuration Modes
 ---------------------------------------------------------
 | PCS1 (bit - 1) |     PCS1 (bit - 0)   |        CS     |	
 ---------------------------------------------------------
-|   0	         |	    0		|	1110	|
-|   0	         |	    1		|	1101	|
-|   1            |	    0		|	1011	|
-|   1	         |	    1		|	0111	|
+|   0	         |	    0				|	1110		|
+|   0	         |	    1				|	1101		|
+|   1            |	    0				|	1011		|
+|   1	         |	    1				|	0111		|
 ---------------------------------------------------------
 
-* @warning 
- * @param[in] unsigned char, unsigned short
- * @param[Out] No output parameter 
+@warning 
+ @param[in]  unsigned char spi_number: Denotes the selected SPI, 
+             unsigned short cword: The control word to be written to SPI control register.
+             for the selected SPI.
+ @param[Out] No output parameter 
 
 */
 
@@ -140,27 +133,28 @@ void SPI_config(UC spi_number, US cword) {
 	return;
 }
 
-/** @fn SPI_set_baud
- * @brief Set the baud frequency divider value to SPI controller baud register.
- * @details 
+/*@fn SPI_set_baud
+ @brief Set the baud frequency divider value to SPI controller baud register.
+ @details 
 -------------------------------------------------
 | 	BAUD   		|  	CLk freq Divider |	
 -------------------------------------------------
-|   	0	     	|	    4		 |	
-|   	1	     	|	    8		 |	
-|   	2        	|	    16		 |	
-|   	3		|	    32		 |
-|	4		|	    64		 |		
-|	5		|	    128		 |		
-|	6		|	    256		 |
-|	7		|	    512		 |
-|	8		|	    1024	 |
-|	9		|	    2048	 |
-|	10-15	     	|	    reserved	 |	
+|   0	     		|	    4		 |	
+|   1	     		|	    8		 |	
+|   2        		|	    16		 |	
+|   3				|	    32		 |
+|	4				|	    64		 |		
+|	5				|	    128		 |		
+|	6				|	    256		 |
+|	7				|	    512		 |
+|	8				|	    1024	 |
+|	9				|	    2048	 |
+|	10-15	     	|	    reserved |	
 -------------------------------------------------
- * @warning 
- * @param[in] unsigned char, unsigned char
- * @param[Out] No output parameter 
+ @warning 
+ @param[in]  unsigned char spi_number: Denotes the selected SPI, 
+             unsigned char bBaudCFD: The baud frequency divisor value.
+ @param[Out] No output parameter 
 */
 void SPI_set_baud(UC spi_number,UC bBaudCFD) {
 
@@ -169,12 +163,12 @@ void SPI_set_baud(UC spi_number,UC bBaudCFD) {
 	return;
 }
 
-/** @fn SPI_get_slave_select
- * @brief Read the slave select value.
- * @details Read the slave select value at bit positions 16 and 17.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] slave select value as 32 bit data 
+/*@fn SPI_get_slave_select
+ @brief Read the slave select value.
+ @details Read the slave select value at bit positions 16 and 17.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] slave select value as 32 bit data 
 */
 UI SPI_get_slave_select(UC spi_number) {
 	UI read_data = 0;
@@ -184,12 +178,13 @@ UI SPI_get_slave_select(UC spi_number) {
 	return read_data;
 }
 
-/** @fn SPI_set_slave_select
- * @brief Write the slave select value.
- * @details Write the slave select value at bit positions 16 and 17.
- * @warning 
- * @param[in] unsigned char, unsigned int
- * @param[Out] slave select value as 32 bit data 
+/*@fn SPI_set_slave_select
+ @brief Write the slave select value.
+ @details Write the slave select value at bit positions 16 and 17.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI, 
+            unsigned int slave_sel_val: The Slave select bits.
+ @param[Out] slave select value as 32 bit data 
 */
 void SPI_set_slave_select(UC spi_number ,UI slave_sel_val) {
 
@@ -200,12 +195,12 @@ void SPI_set_slave_select(UC spi_number ,UI slave_sel_val) {
 	return;
 }
 
-/** @fn SPI_check_overrun
- * @brief  Checks for overrun
- * @details Checks if overrun occurred or not by reading SPI controller's status register.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] returns 1 if overrun occurs otherwise 0. 
+/*@fn SPI_check_overrun
+ @brief  Checks for overrun
+ @details Checks if overrun occurred or not by reading SPI controller's status register.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] returns 1 if overrun occurs otherwise 0. 
 */
 UC SPI_check_overrun(UC spi_number)
 {
@@ -218,12 +213,14 @@ UC SPI_check_overrun(UC spi_number)
 		return 0;
 }
 
-/** @fn SPI_enable_intr
- * @brief  Enable SPI interrupts.
- * @details Enable the SPI tx and Rx interrupt.
- * @warning 
- * @param[in] unsigned char,unsigned char,unsigned char
- * @param[Out] No output parameter 
+/*@fn SPI_enable_intr
+ @brief  Enable SPI interrupts.
+ @details Enable the SPI tx and Rx interrupt.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI, 
+            unsigned char tx_intr: 1 to enable tx intr, 0 to disable tx intr.
+            unsigned char rx_intr: 1 to enable tx intr, 0 to disable tx intr.
+ @param[Out] No output parameter 
 */
 void SPI_enable_intr(UC spi_number,UC tx_intr,UC rx_intr)
 {
@@ -238,14 +235,14 @@ void SPI_enable_intr(UC spi_number,UC tx_intr,UC rx_intr)
 	return;
 }
 
-/** @fn SPI_read
- * @brief  Read data.
- * @details Read data (16 bit) received in Read data register of SPI controller.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] read data as 16 bit value. 
+/*@fn SPI_receive
+ @brief  Read data.
+ @details Read data (16 bit) received in Read data register of SPI controller.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI
+ @param[Out] read data as 16 bit value. 
 */
-US SPI_read(UC spi_number)
+US SPI_receive(UC spi_number)
 {
 	US bRxData;
 	UC status = 0;
@@ -257,16 +254,17 @@ US SPI_read(UC spi_number)
 	return bRxData;
 }
 
-/** @fn SPI_write
- * @brief  Write data.
- * @details Writes data (16 bit) to transmit data register of SPI controller.
- * @warning 
- * @param[in] unsigned char, unsigned short
- * @param[Out] No output parameter. 
+/*@fn SPI_transmit
+ @brief  Write data.
+ @details Writes data (16 bit) to transmit data register of SPI controller.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI, 
+            unsigned short bData: The data to be written to tx data register.
+ @param[Out] No output parameter. 
 */
-void SPI_write(UC spi_number,US bData) {
+void SPI_transmit(UC spi_number,US bData) {
 
-	SPI_check_busy(spi_number);
+	SPI_wait_if_busy(spi_number);
 
 	while (!(SPIreg(spi_number).Status & SPI_TX_HOLD_EMPTY_BIT));
 
@@ -277,64 +275,140 @@ void SPI_write(UC spi_number,US bData) {
 }
 
 
-/** @fn SPI_intr_handler
- * @brief  Interrupt handler.
- * @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] Returns 1 if Tx intr occurs, 2 if Tx intr occurs. 
+/*@fn SPI_0_intr_handler
+ @brief  Interrupt handler.
+ @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] No output parameter. 
 */
-int SPI_intr_handler(UC spi_number) {
+void SPI_0_intr_handler(void) {
 	UC status = 0;
 
-	status = SPIreg(spi_number).Status;
-	if(status & (1 << 2)) // SPI RX intr occurred.
-		return 1;
-	else if(status & (1 << 3))
-		return 2;    // SPI TX intr occurred.
+	status = SPIreg(0).Status;
+	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
+	{
+		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
+	}
+	else if(status & (1 << 3))  // SPI TX register empty interrupt occurred.
+	{
+		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
+	}   
 }
 
-/** @fn SPI_check_busy
- * @brief  Checks if SPI controller is busy.
- * @details Reads SPI controllers status register to check its busy status. Waits here untill it becomes free.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] No output parameter.
+
+/*@fn SPI_0_intr_handler
+ @brief  Interrupt handler.
+ @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] No output parameter. 
 */
-void SPI_check_busy(UC spi_number) {
+void SPI_1_intr_handler(void) {
+	UC status = 0;
+
+	status = SPIreg(1).Status;
+	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
+	{
+		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
+	}
+	else if(status & (1 << 3))  // SPI TX register empty interrupt occurred.
+	{
+		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
+	}   
+}
+
+
+/*@fn SPI_0_intr_handler
+ @brief  Interrupt handler.
+ @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] No output parameter. 
+*/
+void SPI_2_intr_handler(void) {
+	UC status = 0;
+
+	status = SPIreg(2).Status;
+	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
+	{
+		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
+	}
+	else if(status & (1 << 3))  // SPI TX register empty interrupt occurred.
+	{
+		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
+	}   
+}
+
+/*@fn SPI_wait_if_busy
+ @brief  Checks if SPI controller is busy.
+ @details Reads SPI controllers status register to check its busy status. Waits here untill it becomes free.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI
+ @param[Out] No output parameter.
+*/
+void SPI_wait_if_busy(UC spi_number) {
 
 	while (SPIreg(spi_number).Status & SPI_BUSY_BIT);
 	return ;   
 }
 
 
-/** @fn SPI_set_CSAAT_high
- * @brief  Set CSAAT pin high.
- * @details Sets Chip Select Active After Transfer pin high.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] No output parameter.
+/*@fn SPI_set_CSAAT_pin
+ @brief  Set CSAAT pin high/low.
+ @details Sets Chip Select Active After Transfer pin high : This pin must be high when the command/data is more than one byte
+ and pin must be lowered when the command/data is over.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI, 
+            unsigned char status: 1 - to make CSAAT pin high, 0 - to make CSAAT pin low.
+ @param[Out] No output parameter.
 */
-void SPI_set_CSAAT_high(UC spi_number) {
+void SPI_set_CSAAT_pin(UC spi_number, UC status) {
 
-	SPIreg(spi_number).Control.hword |= (1 << 8);	// Setting CSAAT bit high.
+	if(status == 1)
+		SPIreg(spi_number).Control.hword |= (1 << 8);	// Setting CSAAT bit high.
+	else
+		SPIreg(spi_number).Control.hword &= ~(1 << 8);	// Setting CSAAT bit low.
 	__asm__ __volatile__ ("fence");
 	return ;   
 }
 
 
-/** @fn SPI_set_CSAAT_low
- * @brief  Set CSAAT pin high.
- * @details Sets Chip Select Active After Transfer pin low.
- * @warning 
- * @param[in] unsigned char
- * @param[Out] No output parameter.
-*/
-void SPI_set_CSAAT_low(UC spi_number) {
 
-	SPIreg(spi_number).Control.hword &= ~(1 << 8);	// Setting CSAAT bit low.
-	__asm__ __volatile__ ("fence");
-	return ;   
+
+/*@fn SPI_read_rx_reg
+ @brief  Read data.
+ @details Read data (16 bit) received in Read data register of SPI controller.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] read data as 16 bit value. 
+*/
+US SPI_read_rx_reg(UC spi_number)
+{
+	US bRxData;
+	
+	bRxData = SPIreg(spi_number).RxData;
+
+	return bRxData;
 }
 
+/*@fn SPI_transmit
+ @brief  Write data.
+ @details Writes data (16 bit) to transmit data register of SPI controller.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI,
+            unsigned short bData: The data to be written to tx data register.
+ @param[Out] No output parameter. 
+*/
+void SPI_write_tx_reg(UC spi_number,US bData) {
+
+	SPI_wait_if_busy(spi_number);
+
+	while (!(SPIreg(spi_number).Status & SPI_TX_HOLD_EMPTY_BIT));
+
+	SPIreg(spi_number).TxData = bData;		// Write the data (can be a command or actual data to be written to spi device)
+	__asm__ __volatile__ ("fence");
+
+	return;
+}
 

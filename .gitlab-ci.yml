@@ -1,0 +1,53 @@
+# This file is a template, and might need editing before it works on your project.
+# see https://docs.gitlab.com/ce/ci/yaml/README.html for all available options
+
+# you can delete this line if you're not using Docker
+
+before_script:
+  - echo "Setup toolchain"
+  - git clone https://gitlab+deploy-token-209821:3sXfp9wcBqiFjAgYbP-e@gitlab.com/cdac-vega/vega-tools.git
+  - cd vega-tools
+  - ./setup-env.sh
+  - cd ..
+
+after_script:
+  - echo "After script section"
+  - make clean
+
+build1:
+  stage: build
+  script:
+    - ./setup-arty35t.sh
+    - make 
+
+test1:
+  stage: test
+  script:
+    - echo "Do a test here"
+    - echo "For example run a test suite"
+
+build2:
+  stage: build
+  script:
+    - ./setup-arty100t.sh
+    - make 
+
+test2:
+  stage: test
+  script:
+    - echo "Do a test here"
+    - echo "For example run a test suite"
+
+build3:
+  stage: build
+  script:
+    - ./setup-cdac-board.sh
+    - make 
+
+test3:
+  stage: test
+  script:
+    - echo "Do a test here"
+    - echo "For example run a test suite"
+
+

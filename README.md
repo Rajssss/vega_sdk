@@ -1,12 +1,13 @@
-# MDP SDK
+# Vega SDK
+[![pipeline status](https://gitlab.com/cdac-vega/vega-sdk/badges/master/pipeline.svg)](https://gitlab.com/cdac-vega/vega-sdk/-/commits/master)
 
-The MDP SDK contains the following peripherals,example programs for baremetal development
-
-### Peripherals
+The Vega SDK contains the following peripheral APIs, example programs for baremetal development.
+### Peripheral APIs
 - UART
 - PLIC
 - SPI
 - GPIO
+- TIMER
 
 ### Example programs
 - Hello world 
@@ -15,16 +16,17 @@ The MDP SDK contains the following peripherals,example programs for baremetal de
 
 > For Ubuntu 18.04 (or newer) install below listed packages.
 
-- MDP-TOOLS [git clone http://10.176.19.212:3000/MDP/mdp-tools]
--
+- Vega-Tools [git clone https://gitlab.com/cdac-vega/vega-tools.git]
+- build-essential
+- git
 
 ### Creating Workspace
 
 Clone the repository
 
 ```bash
-git clone http://10.176.19.212:3000/MDP/mdp-sdk
-cd mdp-sdk
+git clone https://gitlab.com/cdac-vega/vega-sdk.git
+cd vega-sdk
 ```
 
 ### Setting up Build Environment
@@ -45,6 +47,10 @@ make
 ### Running on Hardware
 
 Transfer the binary file to board.
+
+## Documentation
+
+[Vega SDK Documentation ](https://cdac-vega.gitlab.io/sdkuserguide.html)
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)

@@ -23,12 +23,15 @@
 ***************************************************/
 
 
+
 /*  Define section
 * 
 *
 ***************************************************/
 #define MDP_SPI_0			0
 #define MDP_SPI_1			1
+#define MDP_SPI_2			2
+#define MDP_SPI_3			3
 
 #define SPI_INTR_MODE			1
 #define SPI_POLLING_MODE		2
@@ -105,6 +108,7 @@
 #define RDID_SPI_CMD					0x83
 /***************************************************/
  
+
 typedef struct
 {
 
@@ -158,19 +162,25 @@ typedef union
 *
 ***************************************************/
 
+
+
 void SPI_init(UC spi_number);
 void SPI_config(UC spi_number, US cword);
-void set_SPI_baud(UC bBaudCFD);
-UI read_slave_select(UC spi_number);
-void write_slave_select(UC spi_number ,UI slave_sel_val);
+void SPI_set_baud(UC spi_number,UC bBaudCFD);
+UI SPI_get_slave_select(UC spi_number);
+void SPI_set_slave_select(UC spi_number ,UI slave_sel_val);
 UC SPI_check_overrun(UC spi_number);
 void SPI_enable_intr(UC spi_number,UC tx_intr,UC rx_intr);
-US SPI_read(UC spi_number);
-void SPI_write(UC spi_number,US bData);
-int SPI_intr_handler(UC spi_number);
-void SPI_check_busy(UC spi_number);
-void SPI_set_CSAAT_high(UC spi_number);
-void SPI_set_CSAAT_low(UC spi_number);
+US SPI_receive(UC spi_number);
+void SPI_transmit(UC spi_number,US bData);
+void SPI_intr_handler(UC spi_number);
+void SPI_wait_if_busy(UC spi_number);
+void SPI_set_CSAAT_pin(UC spi_number, UC status);
+US SPI_read_rx_reg(UC spi_number);
+void SPI_write_tx_reg(UC spi_number,US bData);
+
+//void (*spi_handle_rx_intr)(void);  
+//void (*spi_handle_tx_intr)(void);
 
 #endif	/* _SPI_H */	
 
