@@ -114,7 +114,7 @@ upload:
 all:   build_vega_lib $(PROGRAM_ELF) 
 
 clean:
-	rm -r -f $(BIN)
+	rm -f $(BIN)/*
 	@cd $(SDK_PATH)/bsp/ && ./clean.sh	
 mrproper:
 	rm -r -f $(BIN)	
