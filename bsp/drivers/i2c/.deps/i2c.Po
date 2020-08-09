@@ -1,5 +1,0 @@
-drivers/i2c/i2c.o: drivers/i2c/i2c.c include/stdlib.h include/i2c.h \
- include/config.h
-include/stdlib.h:
-include/i2c.h:
-include/config.h:

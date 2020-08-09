@@ -1,5 +1,0 @@
-drivers/uart/debug_uart.o: drivers/uart/debug_uart.c include/debug_uart.h \
- include/config.h include/stdlib.h
-include/debug_uart.h:
-include/config.h:
-include/stdlib.h:
