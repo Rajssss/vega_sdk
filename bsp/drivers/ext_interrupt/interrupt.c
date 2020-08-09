@@ -30,7 +30,7 @@
 fp external_interrupt_table[64];
 
 
-/* @fn external_interrupt
+/* @fn external_interrupt_enable
   @brief  Enable external interrupt.
   @details The selected timer is loaded with the no of clocks and it is enabled with intr unmasked. The timer module waits untill it interrupts.
   @warning 
@@ -38,7 +38,7 @@ fp external_interrupt_table[64];
   @param[Out] No output parameter.
 */
 
-void external_interrupt(UC intr_number)
+void external_interrupt_enable(UC intr_number)
 {
 	ext_intr_regs.INTR_EN |= (1 << intr_number);
 	__asm__ __volatile__ ("fence");
@@ -56,11 +56,20 @@ void external_interrupt(UC intr_number)
 
 void initialize_external_interrupt_table(void)
 {
-	//fp external_interrupt_table[32];
-	//external_interrupt_table[0] = uart_intr_handler;  
-	external_interrupt_table[0] = timer0_intr_handler; 
-	external_interrupt_table[1] = timer1_intr_handler; 
-	external_interrupt_table[2] = timer2_intr_handler;
+	__enable_irq();
+	
+
+#if __riscv_xlen == 64
+	write_csr(mtvec,(UL)external_interrupt_handler);
+	external_interrupt_table[10] = timer0_intr_handler; 
+	external_interrupt_table[11] = timer1_intr_handler; 
+	external_interrupt_table[12] = timer2_intr_handler;
+#else
+	write_csr(mtvec,(UI)external_interrupt_handler);
+	external_interrupt_table[7] = timer0_intr_handler; 
+	external_interrupt_table[8] = timer1_intr_handler; 
+	external_interrupt_table[9] = timer2_intr_handler;
+#endif
 }
 
  

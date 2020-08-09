@@ -34,9 +34,17 @@ typedef void (*fp)(void); //Declares a type of a void function that accepts an v
 
 typedef struct ext_intr_reg
 {
+#if __riscv_xlen == 64
+	UL   RAW_INTR; 		//0x00
+	UL   INTR_EN; 		//0x08
+	UL   INTR_STATUS; 	//0x10
+#else
 	UI   RAW_INTR; 		//0x00
-	UI   INTR_EN; 		//0x04
-	UI   INTR_STATUS; 	//0x08
+	UI   dummy0; 		//0x04
+	UI   INTR_EN; 		//0x08
+	UI   dummy1; 		//0x0c
+	UI   INTR_STATUS; 	//0x10
+#endif
 }EXT_INTR_REG;
 
 #define ext_intr_regs (*((volatile EXT_INTR_REG *)0x20010000))
@@ -45,7 +53,7 @@ typedef struct ext_intr_reg
 *
 ***************************************************/
 
-void external_interrupt(UC intr_number);
+void external_interrupt_enable(UC intr_number);
 void initialize_external_interrupt_table(void);
 void external_interrupt_handler(void);
 

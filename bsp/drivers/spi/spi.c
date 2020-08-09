@@ -275,17 +275,61 @@ void SPI_transmit(UC spi_number,US bData) {
 }
 
 
-/*@fn SPI_intr_handler
+/*@fn SPI_0_intr_handler
  @brief  Interrupt handler.
  @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
  @warning 
  @param[in] unsigned char spi_number: Denotes the selected SPI.
  @param[Out] No output parameter. 
 */
-void SPI_intr_handler(UC spi_number) {
+void SPI_0_intr_handler(void) {
 	UC status = 0;
 
-	status = SPIreg(spi_number).Status;
+	status = SPIreg(0).Status;
+	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
+	{
+		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
+	}
+	else if(status & (1 << 3))  // SPI TX register empty interrupt occurred.
+	{
+		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
+	}   
+}
+
+
+/*@fn SPI_0_intr_handler
+ @brief  Interrupt handler.
+ @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] No output parameter. 
+*/
+void SPI_1_intr_handler(void) {
+	UC status = 0;
+
+	status = SPIreg(1).Status;
+	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
+	{
+		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
+	}
+	else if(status & (1 << 3))  // SPI TX register empty interrupt occurred.
+	{
+		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
+	}   
+}
+
+
+/*@fn SPI_0_intr_handler
+ @brief  Interrupt handler.
+ @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] No output parameter. 
+*/
+void SPI_2_intr_handler(void) {
+	UC status = 0;
+
+	status = SPIreg(2).Status;
 	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
 	{
 		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
