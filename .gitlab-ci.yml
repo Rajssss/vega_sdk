@@ -9,7 +9,6 @@ before_script:
   - cd vega-tools
   - ./setup-env.sh
   - cd ..
-  - ./setup-arty35t.sh
 
 after_script:
   - echo "After script section"
@@ -18,6 +17,7 @@ after_script:
 build1:
   stage: build
   script:
+    - ./setup-arty35t.sh
     - make 
 
 test1:
@@ -26,13 +26,28 @@ test1:
     - echo "Do a test here"
     - echo "For example run a test suite"
 
+build2:
+  stage: build
+  script:
+    - ./setup-arty100t.sh
+    - make 
+
 test2:
   stage: test
   script:
-    - echo "Do another parallel test here"
-    - echo "For example run a lint test"
+    - echo "Do a test here"
+    - echo "For example run a test suite"
 
-deploy1:
-  stage: deploy
+build3:
+  stage: build
   script:
-    - echo "Do your deploy here"
+    - ./setup-cdac-board.sh
+    - make 
+
+test3:
+  stage: test
+  script:
+    - echo "Do a test here"
+    - echo "For example run a test suite"
+
+
