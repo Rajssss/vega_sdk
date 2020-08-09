@@ -24,9 +24,9 @@
  ***************************************************/
 
 
-#include "stdlib.h"
-#include "config.h"
-#include "uart.h"
+#include <include/stdlib.h>
+#include <include/config.h>
+#include <include/uart.h>
 /**
 @fn uart_init
 @brief default baud rate and frame initialization

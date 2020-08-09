@@ -1,71 +1,148 @@
-UTIL_PATH=${MDP_TOOLS}/utils
-TOOLCHAIN_PATH=${MDP_TOOLCHAIN64_PATH}
-CC=$(TOOLCHAIN_PATH)/riscv64-unknown-elf-gcc 
-CFLAGS=-c -mcmodel=medany -march=rv64imafd -fno-builtin-printf -fdata-sections -ffunction-sections -fno-builtin-memcmp
-LIB=
-LDFLAGS= -mcmodel=medany -nostartfiles -nostdlib -std=gnu99 -Wl,--gc-sections
+MACHINE=${VEGA_MACHINE}
+UTIL_PATH=${VEGA_TOOLS}/utils
+TOOLCHAIN_PATH=${VEGA_TOOLCHAIN_PATH}
 
 
-INC=-I$(SDK_PATH)/bsp/include
+ifeq ($(MACHINE),ARTY35)
+$(info TARGET:  ARTY35T Board)
+RISCV_ARCH=rv32im
+RISCV_ABI=ilp32
+XLEN=32
+RISCV_CMODEL=medany
+RISCV_LIB_FLAGS= -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+endif
+ifeq ($(MACHINE),ARTY100)
+$(info TARGET:  ARTY100T Board)
+RISCV_ARCH=rv64imac
+RISCV_ABI=lp64
+XLEN=64
+RISCV_CMODEL=medany
+RISCV_LIB_FLAGS= -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+endif
+ifeq ($(MACHINE),CDAC)
+$(info TARGET: CDAC FPGA Board)
+RISCV_ARCH=rv64imafd
+RISCV_ABI=lp64d
+XLEN=64
+RISCV_CMODEL=medany
+RISCV_LIB_FLAGS= -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+endif
+
+#+++++++++++++++++++++++
+# Toolchain
+#+++++++++++++++++++++++
+
+# Please add your own compiler prefix here
+CROSS_COMPILE ?= riscv64-vega-elf
+
+# Add the custom toolchain path in VEGA_RISCV_PATH
+ifeq ($(VEGA_RISCV_PATH),)
+RISCV_GCC     := $(TOOLCHAIN_PATH)/$(CROSS_COMPILE)-gcc
+RISCV_GXX     := $(TOOLCHAIN_PATH)/$(CROSS_COMPILE)-g++
+RISCV_OBJDUMP := $(TOOLCHAIN_PATH)/$(CROSS_COMPILE)-objdump
+RISCV_OBJCOPY := $(TOOLCHAIN_PATH)/$(CROSS_COMPILE)-objcopy
+RISCV_GDB     := $(TOOLCHAIN_PATH)/$(CROSS_COMPILE)-gdb
+RISCV_AR      := $(TOOLCHAIN_PATH)/$(CROSS_COMPILE)-ar
+RISCV_SIZE    := $(TOOLCHAIN_PATH)/$(CROSS_COMPILE)-size
+PATH          := $(TOOLCHAIN_PATH)):$(PATH)
+else
+RISCV_GCC     := $(CROSS_COMPILE)-gcc
+RISCV_GXX     := $(CROSS_COMPILE)-g++
+RISCV_OBJDUMP := $(CROSS_COMPILE)-objdump
+RISCV_OBJCOPY := $(CROSS_COMPILE)-objcopy
+RISCV_GDB     := $(CROSS_COMPILE)-gdb
+RISCV_AR      := $(CROSS_COMPILE)-ar
+RISCV_SIZE    := $(CROSS_COMPILE)-size
+endif
+#+++++++++++++++++++++++
+# Flags
+#+++++++++++++++++++++++
+
+# Setting up the  arch, ABI, and code model of selected board
+RISCV_CCASFLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+RISCV_CFLAGS    += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+RISCV_CXXFLAGS  += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+RISCV_ASFLAGS   += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+# Prune unused functions and data
+RISCV_CFLAGS   += -fno-builtin-printf -fdata-sections -ffunction-sections -fno-builtin-memcmp 
+RISCV_CXXFLAGS += -fno-builtin-printf -fdata-sections -ffunction-sections -fno-builtin-memcmp 
+# Include baremetal driver headers
+RISCV_CCASFLAGS += -I$(SDK_PATH)/bsp/include
+RISCV_CFLAGS    += -I$(SDK_PATH)/bsp/include
+RISCV_CXXFLAGS  += -I$(SDK_PATH)/bsp/include
+# newlib-nano spec
+RISCV_CCASFLAGS += --specs=nano.specs
+RISCV_CFLAGS    += --specs=nano.specs
+RISCV_CXXFLAGS  += --specs=nano.specs
+
+# Linker will remove the unused sections
+RISCV_LDFLAGS += -Wl,--gc-sections
+# linker map file generation
+RISCV_LDFLAGS += -Wl,-Map,$(BIN)/$(EXECUTABLE_NAME).map
+# Turn off the C standard library
+RISCV_LDFLAGS += -nostartfiles -nostdlib -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+# Find the archive files and linker scripts
+RISCV_LDFLAGS += -T $(SDK_PATH)/bsp/common/mbl.lds -L$(SDK_PATH)/bsp
+
+# Link to the relevant libraries
+RISCV_LDLIBS += -Wl,--start-group -lvega -lc -lgcc -lm  -Wl,--end-group
 
 # Folders
 BIN=build
 
-#-----------------------------------------
-# 				Rules 		      		 #
-#-----------------------------------------
-LINK_OPTS ?=  -T $(SDK_PATH)/bsp/common/mbl.lds
-EXECUTABLE_FILES = $(EXECUTABLE_NAME:%=$(BIN)/%)
+#+++++++++++++++++++++++
+# Rules
+#+++++++++++++++++++++++
+CC=$(RISCV_GCC)
+
+PROGRAM_ELF ?= $(BIN)/$(EXECUTABLE_NAME).elf
+PROGRAM_BIN ?= $(BIN)/$(EXECUTABLE_NAME).bin
+PROGRAM_HEX ?= $(BIN)/$(EXECUTABLE_NAME).hex
+PROGRAM_LST ?= $(BIN)/$(EXECUTABLE_NAME).lst
+PROGRAM_DUMP ?= $(BIN)/$(EXECUTABLE_NAME).dump
 
 OBJECT_FILES_C   = $(patsubst %.c, $(BIN)/%.o,  $(wildcard *.c))
 OBJECT_FILES_S   = $(patsubst %.S, $(BIN)/%.o,  $(wildcard *.S))
 
-BSP_FILES = $(shell find $(SDK_PATH)/bsp -type f -name '*.c')
-BSP_FILES += $(shell find $(SDK_PATH)/bsp -type f -name '*.S')
+.PHONY: all
 
-COPY_FILES := $(patsubst $(SDK_PATH)/bsp/%,$(BIN)/%,$(BSP_FILES))
-
-.PHONY: default
 default: all 
 
-upload: all
+upload: 
 	@$(UTIL_PATH)/eth_transfer/send.sh $(PWD)/$(BIN)/$(EXECUTABLE_NAME).bin
 
-all:   $(EXECUTABLE_FILES) 
+all:   build_vega_lib $(PROGRAM_ELF) 
 
 clean:
-	rm -r -f $(BIN)	
+	rm -r -f $(BIN)
+	@cd $(SDK_PATH)/bsp/ && ./clean.sh	
 mrproper:
 	rm -r -f $(BIN)	
 .PHONY: build clean
 
-
-
-$(EXECUTABLE_FILES): $(COPY_FILES) $(OBJECT_FILES_C) $(OBJECT_FILES_S) 
-	@$(CC) $(LDFLAGS) -o $@ $^ $(LIB) $(INC) $(LINK_OPTS)	
+$(PROGRAM_ELF): $(OBJECT_FILES_C) $(OBJECT_FILES_S) 
+	@echo Linking $^
+	$(CC) $(RISCV_LDFLAGS)  $^ $(RISCV_LDLIBS) -o $@  	
 	@echo "Build successful!"
-	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objdump -d $(BIN)/$(EXECUTABLE_NAME) > $(BIN)/$(EXECUTABLE_NAME).dump
-	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-objcopy -I elf64-littleriscv -O binary  $(BIN)/$(EXECUTABLE_NAME) $(BIN)/$(EXECUTABLE_NAME).bin
-	@$(UTIL_PATH)/bin2hex --bit-width 128 $(BIN)/$(EXECUTABLE_NAME).bin $(BIN)/$(EXECUTABLE_NAME).hex
+	@$(RISCV_OBJDUMP) -d $@ > $(PROGRAM_DUMP)
+	@$(RISCV_OBJCOPY) -I elf$(XLEN)-littleriscv -O binary  $@ $(PROGRAM_BIN)
+	@$(UTIL_PATH)/bin2hex --bit-width 128 $(PROGRAM_BIN) $(PROGRAM_HEX)
+	@$(RISCV_OBJDUMP) --source --all-headers --demangle --line-numbers --wide $@ > $(PROGRAM_LST)
 	@echo -n "ELF\t: $(EXECUTABLE_NAME)\nBinary\t: $(EXECUTABLE_NAME).bin\n"
 	@echo -n "Hex\t: $(EXECUTABLE_NAME).hex\nDump\t: $(EXECUTABLE_NAME).dump\nFiles are generated in $(BIN) folder.\n"
 	@echo -n "Size information\n"
-	@$(TOOLCHAIN_PATH)/riscv64-unknown-elf-size $(BIN)/$(EXECUTABLE_NAME)
-
-
+	@$(RISCV_SIZE) $@
+	
 $(OBJECT_FILES_C): $(BIN)/%.o: %.c
 	@echo Compiling $<
 	@mkdir -p $(@D)	
-	@$(CC) $(CFLAGS) $(INC) -o $@ $<
+	$(CC) $(RISCV_CFLAGS) -c $^ -o $@
 
 $(OBJECT_FILES_S): $(BIN)/%.o: %.S
 	@echo Compiling $<	
 	@mkdir -p $(@D)	
-	@$(CC) $(CFLAGS) $(INC) -o $@ $<	
-
+	$(CC) $(RISCV_CCASFLAGS) -o $@ $<	
 	
-	
-$(COPY_FILES): $(BIN)/%: $(SDK_PATH)/bsp/%
-	@mkdir -p $(@D)
-	@cp -rf $< $@ 
+build_vega_lib: 
+	@cd $(SDK_PATH)/bsp/ &&  ./setup.sh "$(TOOLCHAIN_PATH)" "$(RISCV_LIB_FLAGS)"
 	

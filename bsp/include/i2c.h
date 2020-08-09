@@ -20,7 +20,6 @@
  @detail Includes software functions declarations to initialize,
  configure, write and read over I2C interface
  */
-#include "config.h"
 
 typedef unsigned char UC; //1 Byte
 typedef unsigned short US; //2 Bytes

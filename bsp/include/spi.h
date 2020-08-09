@@ -22,9 +22,6 @@
 *
 ***************************************************/
 
-#include "config.h"
-#include "stdlib.h"
-
 
 /*  Define section
 * 

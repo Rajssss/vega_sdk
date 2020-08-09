@@ -1,0 +1,29 @@
+lib_LIBRARIES = libvega.a
+
+#libvega_a_CFLAGS = @VEGA_FLAGS@ 
+#libvega_a_CCASFLAGS = @VEGA_FLAGS@ 
+
+
+libvega_a_SOURCES = \
+	./drivers/uart/uart.c \
+	./drivers/uart/debug_uart.c \
+	./drivers/gpio/gpio.c \
+	./drivers/i2c/i2c.c \
+	./drivers/spi/spi.c \
+	./drivers/timer/timer.c \
+	./common/stdlib.c \
+	./common/crt.S
+	
+nobase_include_HEADERS = \
+	./include/gpio.h \
+	./include/i2c.h \
+	./include/m25p80_eeprom.h \
+	./include/config.h \
+	./include/spi.h \
+	./include/timer.h \
+	./include/uart.h \
+	./include/debug_uart.h \
+	./include/encoding.h \
+	./include/stdlib.h
+
+

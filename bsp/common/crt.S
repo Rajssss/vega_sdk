@@ -19,8 +19,8 @@
 @detail Register initilization and start file for programs.
 */ 
 
-#include "encoding.h"
-#include "config.h"
+#include <include/encoding.h>
+#include <include/config.h>
 
 #if __riscv_xlen == 64
 # define LREG ld
@@ -148,7 +148,7 @@ _start:
 1:bgeu a0, a1, 1b
 
   # give each core 32KB of stack + TLS
-#define STKSHIFT 15
+#define STKSHIFT 17
   sll a2, a0, STKSHIFT
   add tp, tp, a2
   add sp, a0, 1

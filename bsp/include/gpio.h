@@ -1,6 +1,6 @@
 
-#ifndef GPIO_H_
-#define GPIO_H_
+#ifndef GPIO_DRIVER_H_
+#define GPIO_DRIVER_H_
 
 
 
@@ -8,8 +8,6 @@
 *
 ***************************************************/
 
-#include "stdlib.h"	//for datatypes
-#include "config.h"	//for datatypes
 
 /*  Defines section
 *
@@ -46,4 +44,4 @@
 US GPIO_read_pin(UC gpio_number,US pin_no);
 void GPIO_write_pin(UC gpio_number,US pin_no,US data);
 
-#endif /* GPIO_H_ */
+#endif /* GPIO_DRIVER_H_ */

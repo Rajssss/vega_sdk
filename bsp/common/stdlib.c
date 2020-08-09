@@ -17,7 +17,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-#include "debug_uart.h"
+#include <include/debug_uart.h>
 
 #define NUM_COUNTERS 2
 static uintptr_t counters[NUM_COUNTERS];

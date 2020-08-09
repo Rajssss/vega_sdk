@@ -22,9 +22,10 @@
 
 ***************************************************************************/
 
-#include "stdlib.h"
-#include "spi.h"
-#include "uart.h"
+#include <include/stdlib.h>
+#include <include/config.h>
+#include <include/spi.h>
+#include <include/uart.h>
 
 SPIcntrlRegType gSPItransfer;
 
