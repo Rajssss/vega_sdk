@@ -40,11 +40,13 @@ echo "Setting up VEGA SDK Environment"
 set_property "VEGA_SDK" "$VEGA_SDK"
 set_property "VEGA_MACHINE" "CDAC"
 
-echo "VEGA SDK Environment added"
 
-cd ./bsp && autoreconf -f -i && ./clean.sh > /dev/null
+
+cd ./bsp && ./clean.sh > /dev/null && autoreconf -f -i  
 cd ..
 make clean > /dev/null
+
+echo "VEGA SDK Environment added"
 
 vega_tool_flag=$(get_property "VEGA_TOOLS")
 

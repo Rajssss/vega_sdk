@@ -13,7 +13,7 @@ RISCV_LIB_FLAGS= -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL
 endif
 ifeq ($(MACHINE),ARTY100)
 $(info TARGET:  ARTY100T Board)
-RISCV_ARCH=rv64ima
+RISCV_ARCH=rv64imac
 RISCV_ABI=lp64
 XLEN=64
 RISCV_CMODEL=medany
