@@ -34,32 +34,59 @@
  */
 void main() {
 
-	printf("I2C EEPROM-24aa64-V7\n\r");
+	printf("I2C EEPROM-24aa64\n\r");
 	i2c_configure(0, 25000000, 100000); //System clock =25MHz and I2C clock =100 kHz
 	//i2c_initialize(0);
 
 	printf("I2C EEPROM Write started 1 byte \n\r");
 
-	i2c_WriteByte_EEPROM(0, 0x05, 0x1000, 0xA2);//control code 0A,chip select 0
+	i2c_WriteByte_EEPROM(0, 0x02, 0x0000, 0xA2);//control code 0A,chip select 0
 	printf("I2C EEPROM Read started 1 byte \n\r");
-	UC Byte_data = i2c_ReadByte_EEPROM(0, 0xA0, 0xA3, 0x1000);//control code 0A,chip select 0
+	UC Byte_data = i2c_ReadByte_EEPROM(0, 0xA2, 0xA3, 0x0000);//control code 0A,chip select 0
 
-
-	if (Byte_data == 0x05) {
-		printf("Rxd character is 0x05 \n\r");
+	if (Byte_data == 0x02) {
+		printf("Rxd character is 0x02 \n\r");
 		printf("Byte write and read successfull \n\r");
 
 	} else {
 		printf("Byte write and read failure \n\r");
 
 	}
+	UC data_arr[16];
+	UC rxd_data[16];
+	UL rand_value = 99;
+	printf("Array initialisation \n\r");
+	for (UL i = 0; i < 16; i++) {	//array initialisation
 
+		rand_value = rand_value * 5;
+		if (rand_value == 0)
+			rand_value = 99;
+		data_arr[i] = (UC) rand_value;
+		//printf("data to be wriiten %x", data_arr[i]);
+		//printf("\n\r");
+	}
+	printf("I2C EEPROM Write started \n\r");
+	i2c_WriteMultiByte_EEPROM(0, data_arr, 0x0000, 0xA2, 16);
+	printf("I2C EEPROM Read started\n\r");
+	i2c_ReadMultiByte_EEPROM(0, rxd_data, 0xA2, 0xA3, 0x0000, 16);
+	for (int i = 0; i < 16; i++)	//comparison
+		if (rxd_data[i] != data_arr[i]) {
+			printf("read unsuccessfull \n\r");
+			printf("rxd data %x", rxd_data[i]);
+			printf("; ref data %x", data_arr[i]);
+			printf("\n\r");
+			while (1)
+				;
+
+		}
+
+	printf("success \n\r");
 	while (1)
 		;
 }
 
 /**
- @fn i2c_WriteByte
+ @fn i2c_WriteByte_EEPROM
  @brief writes a byte of data to EEPROM with I2C interface
  @details write 1 byte data after writing slave address and word address
  @param[in] unsigned char(i2c_number--which i2c to be used)
@@ -71,31 +98,33 @@ void main() {
 
  */
 void i2c_WriteByte_EEPROM(UC i2c_num, UC WBdata, US Word_Address,
-		US Slave_Address_Wr) {
+		UC Slave_Address_Wr) {
+	UC Word_addr_MSB = (UC) (Word_Address >> 8);
+	UC Word_addr_LSB = (UC) (Word_Address & 0xFF);
 
 	while (1) {
 		i2c_start(i2c_num, 0x00, 0);
-		//printf("start sequence generated\n\r");
-		if (i2c_data_write(i2c_num, Slave_Address_Wr)) { //writes slave address and set EEPROM to write mode
-			//printf("Slave address NACK\n\r");
-			continue;//received NACK
-		}
-		//printf("Slave address ACK\n\r");
-		if (i2c_data_write(i2c_num, (UC) ((Word_Address >> 8)))) { //writes MSB of address
 
-			continue;//received NACK
-		}
-		//printf("Word address MSB ACK\n\r");
-		if (i2c_data_write(i2c_num, (UC) (Word_Address & 0xFF))) { //writes LSB of address
+		if (i2c_data_write(i2c_num, &Slave_Address_Wr, 01)) { //writes slave address and set EEPROM to write mode
 
-			continue;//received NACK
+			continue; //received NACK
 		}
-		//printf("Word address LSB ACK\n\r");
-		if (i2c_data_write(i2c_num, WBdata)) { //writes data
 
-			continue;//received NACK
+		if (i2c_data_write(i2c_num, &Word_addr_MSB, 01)) { //writes MSB of address
+
+			continue; //received NACK
 		}
-		//printf("Data ACK\n\r");
+
+		if (i2c_data_write(i2c_num, &Word_addr_LSB, 01)) { //writes LSB of address
+
+			continue; //received NACK
+		}
+
+		if (i2c_data_write(i2c_num, &WBdata, 01)) { //writes data
+
+			continue; //received NACK
+		}
+
 		i2c_stop(i2c_num);
 		break;
 
@@ -103,7 +132,7 @@ void i2c_WriteByte_EEPROM(UC i2c_num, UC WBdata, US Word_Address,
 }
 
 /**
- @fn i2c_ReadByte
+ @fn i2c_ReadByte_EEPROM
  @brief writes a byte of data to EEPROM with I2C interface
  @details write 1 byte data after writing slave address and word address
  @param[in] unsigned char(i2c_number--which i2c to be used)
@@ -114,98 +143,147 @@ void i2c_WriteByte_EEPROM(UC i2c_num, UC WBdata, US Word_Address,
  @return unsigned char data from EEPROM
 
  */
-UC i2c_ReadByte_EEPROM(UC i2c_num, US Slave_Address_Wr, US Slave_Address_Rd,
+UC i2c_ReadByte_EEPROM(UC i2c_num, UC Slave_Address_Wr, UC Slave_Address_Rd,
 		US Word_Address) {
-
+	UC Word_addr_MSB = (UC) (Word_Address >> 8);
+	UC Word_addr_LSB = (UC) (Word_Address & 0xFF);
 	UC rxd_data;
 
 	while (1) {
 		i2c_start(i2c_num, 0x00, 0);
 
-		if (i2c_data_write(i2c_num, Slave_Address_Wr)) { //writes slave address
+		if (i2c_data_write(i2c_num, &Slave_Address_Wr, 01)) { //writes slave address
 
-			continue;//received NACK
+			continue; //received NACK
 		}
 		//printf("Slave address ACK\n\r");
-		if (i2c_data_write(i2c_num, (UC) ((Word_Address >> 8)))) { //writes MSB of address
+		if (i2c_data_write(i2c_num, &Word_addr_MSB, 01)) { //writes MSB of address
 
-			continue;//received NACK
+			continue; //received NACK
 		}
 
-		if (i2c_data_write(i2c_num, (UC) (Word_Address & 0xFF))) { //writes LSB of address
+		if (i2c_data_write(i2c_num, &Word_addr_LSB, 01)) { //writes LSB of address
 
-			continue;//received NACK
+			continue; //received NACK
 		}
 		//printf("Word address  ACK\n\r");
 		i2c_stop(i2c_num);
 
 		i2c_start(i2c_num, 0x01, 1); //start sequence for reading data
-		if (i2c_data_write(i2c_num, Slave_Address_Rd)) { //write slave address and set EEPROM to read mode
+		if (i2c_data_write(i2c_num, &Slave_Address_Rd, 01)) { //write slave address and set EEPROM to read mode
 
-			continue;//received NACK
+			continue; //received NACK
 		}
 		//printf("Slave address read ACK\n\r");
-		rxd_data = i2c_ReadData(i2c_num);
-		printf("data is %x",rxd_data);
-					printf("\n\r");
+		i2c_data_read(i2c_num, &rxd_data, 01);
+		printf("data is %x", rxd_data);
+		printf("\n\r");
 		return rxd_data;
-		break;
+
 	}
 
 }
-#ifdef USED
+
 /**
  @fn i2c_WriteMultiByte_EEPROM
  @brief writes given number of byte of data to EEPROM with I2C interface
  @details write bytes data after writing slave address and word address
- @param[in] unsigned char(i2c_number--which i2c to be used)
- @param[in] unsigned char (WBdata--data to be written)
- @param[in] unsigned short (Word_Address--word address)
- @param[in] unsigned short (Slave_Address_Wr--Slave address for write)
+ @param[in] unsigned char(i2c_num--which i2c to be used)
+ @param[in] unsigned char(*WBdata--address of the data array(to be written to EEPROM))
+ @param[in] unsigned short (Word_Address--starting word address)
+ @param[in] unsigned char (Slave_Address_Wr--Slave address for write)
+ @param[in] unsigned long (write_data_length--no:of bytes to be written)
  @param[Out] No ouput parameter.
  @return Void function.
 
  */
-void i2c_WriteMultiByte_EEPROM(UC i2c_number,UL no_of_bytes) {
-	UC WPdata = 0x01;
+void i2c_WriteMultiByte_EEPROM(UC i2c_num, UC *WBdata, US Word_Address,
+		UC Slave_Address_Wr, UC write_data_length) {
+	UC Word_addr_MSB = (UC) (Word_Address >> 8);
+	UC Word_addr_LSB = (UC) (Word_Address & 0xFF);
 
-	for (UL j = 0; j < no_of_bytes; j++) {
-		i2c_WriteByte_EEPROM(i2c_number, WPdata, j, 0xA0);//control code 0A,chip select 0
+	while (1) {
+		i2c_start(i2c_num, 0x00, 0);
 
-		WPdata ++;
+		if (i2c_data_write(i2c_num, &Slave_Address_Wr, 01)) { //writes slave address and set EEPROM to write mode
+
+			continue; //received NACK
+		}
+
+		if (i2c_data_write(i2c_num, &Word_addr_MSB, 01)) { //writes MSB of address
+
+			continue; //received NACK
+		}
+
+		if (i2c_data_write(i2c_num, &Word_addr_LSB, 01)) { //writes LSB of address
+
+			continue; //received NACK
+		}
+
+		if (i2c_data_write(i2c_num, WBdata, write_data_length)) { //writes data
+
+			continue; //received NACK
+		}
+
+		i2c_stop(i2c_num);
+		break;
+
+	}
+}
+
+/**
+ @fn i2c_ReadMultiByte_EEPROM
+ @brief read given number of byte of data to EEPROM with I2C interface
+ @details read bytes data after writing slave address and word address
+ @param[in] unsigned char(i2c_num--which i2c to be used)
+ @param[in] unsigned char (Slave_Address_Wr--Slave address for write)
+ @param[in] unsigned char (Slave_Address_Rd--Slave address for read)
+ @param[in] unsigned short (Word_Address--starting word address)
+ @param[in] unsigned long (read_data_length--no:of bytes to be read)
+ @param[Out] unsigned char (rxd_data)
+ @return Void function.
+
+ */
+
+void i2c_ReadMultiByte_EEPROM(UC i2c_num, UC *rxd_data, UC Slave_Address_Wr,
+		UC Slave_Address_Rd, US Word_Address, UC read_data_length) {
+	UC Word_addr_MSB = (UC) (Word_Address >> 8);
+	UC Word_addr_LSB = (UC) (Word_Address & 0xFF);
+
+	while (1) {
+		i2c_start(i2c_num, 0x00, 0);
+
+		if (i2c_data_write(i2c_num, &Slave_Address_Wr, 01)) { //writes slave address
+
+			continue; //received NACK
+		}
+		printf("Slave address ACK\n\r");
+		if (i2c_data_write(i2c_num, &Word_addr_MSB, 01)) { //writes MSB of address
+
+			continue; //received NACK
+		}
+
+		if (i2c_data_write(i2c_num, &Word_addr_LSB, 01)) { //writes LSB of address
+
+			continue; //received NACK
+		}
+		printf("Word address  ACK\n\r");
+		i2c_stop(i2c_num);
+
+		i2c_start(i2c_num, read_data_length, 01); //start sequence for reading data
+		if (i2c_data_write(i2c_num, &Slave_Address_Rd, 01)) { //write slave address and set EEPROM to read mode
+
+			continue; //received NACK
+		}
+		printf("Slave address read ACK\n\r");
+		i2c_data_read(i2c_num, rxd_data, read_data_length);
+
+		//printf("data is %x", rxd_data);
+		//printf("\n\r");
+		break;
 
 	}
 
 }
-
-/**************************************************
- * Function name	: i2c_ReadFlash_Full_MultiChar
- * Created by	: Karthika P
- * Date created	: 19/08/2019
- * Description	: Read flash(multi characters)
- * Notes			:
- **************************************************/
-void i2c_ReadMultiByte_EEPROM(UC i2c_number,UL no_of_bytes) {
-
-	UC Ref_data = 0x01;
-
-	for (US j = 0; j < no_of_bytes; j++) {
-	UC Rxd_data=i2c_ReadByte_EEPROM(i2c_number,0xA2, 0xA3,j);
-	if (Rxd_data != Ref_data) {
-						printf("read unsuccessfull \n\r");
-						printf("rxd data ");
-						TxHexUartByteDbg(i2c_rxd_data);
-						TxStringUartDbg("; ref data  ");
-						TxHexUartByteDbg(wr_data);
-						TxStringUartDbg("\n\r");
-						i2c_failure();
-					}
-		Ref_data ++;
-
-	}
-	//TxStringUartDbg("Full Flash read successfull //
-#endif
-
-
 
 

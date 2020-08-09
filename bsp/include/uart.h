@@ -62,7 +62,8 @@ void uart_putchar(UC uart_number, UC bTxCharacter, char *error);
 UC uart_getchar(UC uart_number, char *error);
 void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr);
 void uart_set_baud_rate(UC uart_number,UL Baud_rate, UL Uart_clock);
-
+int uart_intr_handler(UC uart_number);
+void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr);
 #endif /*__UART_H*/
 
 

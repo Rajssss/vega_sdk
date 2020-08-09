@@ -50,15 +50,19 @@ typedef struct {
  ***************************************************/
 
 void i2c_initialize(UC i2c_number);
-void i2c_start(UC i2c_number, UC read_length, UC Read);
+UC i2c_start(UC i2c_number, UC read_length, UC Read);
 void i2c_configure(UC i2c_number,UL System_Clock, UL I2C_Clock);
-UC i2c_data_write(UC i2c_number, UC Data);
+UC i2c_data_write(UC i2c_number, UC *write_data, UC write_length);
 void i2c_stop(UC i2c_number);
-UC i2c_ReadData(UC i2c_number);
+UC i2c_data_read(UC i2c_number, UC *read_data, UC read_length);
+int I2C_intr_handler(UC I2C_number);
+void I2C_enable_intr(UC i2c_number,UC tx_intr,UC rx_intr);
 
-void i2c_WriteByte_EEPROM(UC i2c_number,UC WBdata, US Word_Address, US Slave_Address_Wr);
-UC i2c_ReadByte_EEPROM(UC i2c_number,US Slave_Address_Wr,US Slave_Address_Rd, US Word_Address);
-void i2c_WriteMultiChar(UL no_of_bytes);
+void i2c_WriteByte_EEPROM(UC i2c_number,UC WBdata, US Word_Address, UC Slave_Address_Wr);
+UC i2c_ReadByte_EEPROM(UC i2c_number,UC Slave_Address_Wr,UC Slave_Address_Rd, US Word_Address);
+void i2c_WriteMultiByte_EEPROM(UC i2c_num, UC *WBdata, US Word_Address,UC Slave_Address_Wr, UC write_data_length);
+void i2c_ReadMultiByte_EEPROM(UC i2c_num, UC *rxd_data, UC Slave_Address_Wr,UC Slave_Address_Rd, US Word_Address, UC read_data_length);
+
 
 #endif /*__I2C_H*/
 

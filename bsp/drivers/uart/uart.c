@@ -179,7 +179,6 @@ UC uart_getchar(UC uart_number, char *error) {
 @param[in] unsigned char(uart_number)
 @param[in] unsigned char(tx_intr)
 @param[in] unsigned char(rx_intr)
-@param[in] unsigned char(rxd_data_avail_intr)
 @param[Out] No ouput parameter.
 @return Void function.
  */
@@ -188,5 +187,22 @@ void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr) {
 
 	UartReg(uart_number).UART_IE = ((rx_intr << 2) | (tx_intr << 1));
 	__asm__ __volatile__ ("fence");
+}
+
+/** @fn uart_intr_handler
+ * @brief  Interrupt handler.
+ * @details Reads uart controllers status register to distinguish which type of interrupt has occurred.
+ * @warning
+ * @param[in] unsigned char
+ * @param[Out] Returns 1 if Tx intr occurs, 2 if Rx intr occurs.
+*/
+int uart_intr_handler(UC uart_number) {
+	UC status = 0;
+
+	status = UartReg(uart_number).UART_IIR_FCR;
+	if((status & 0x02)==0x02) // uart TX intr occurred.
+		return 1;
+	else if((status & 0x04)==0x04)
+		return 2;    // uart RX intr occurred.
 }
 
