@@ -8,6 +8,8 @@
 /install-sh
 /libtool
 /ltmain.sh
+/ar-lib
+/compile
 /m4/
 /missing
 /stamp-h?
