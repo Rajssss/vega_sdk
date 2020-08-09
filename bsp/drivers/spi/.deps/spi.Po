@@ -1,5 +1,0 @@
-drivers/spi/spi.o: drivers/spi/spi.c include/stdlib.h include/spi.h \
- include/config.h
-include/stdlib.h:
-include/spi.h:
-include/config.h:

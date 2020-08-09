@@ -1,9 +1,0 @@
-drivers/timer/timer.o: drivers/timer/timer.c include/stdlib.h \
- include/timer.h include/stdlib.h include/config.h include/interrupt.h \
- include/config.h
-include/stdlib.h:
-include/timer.h:
-include/stdlib.h:
-include/config.h:
-include/interrupt.h:
-include/config.h:
