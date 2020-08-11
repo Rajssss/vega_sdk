@@ -11,6 +11,7 @@ libvega_a_SOURCES = \
 	./drivers/i2c/i2c.c \
 	./drivers/spi/spi.c \
 	./drivers/timer/timer.c \
+	./drivers/adc/adc.c \
 	./common/stdlib.c \
 	./common/crt.S
 	
@@ -23,6 +24,7 @@ nobase_include_HEADERS = \
 	./include/timer.h \
 	./include/uart.h \
 	./include/debug_uart.h \
+	./include/adc.h \
 	./include/encoding.h \
 	./include/stdlib.h
 
