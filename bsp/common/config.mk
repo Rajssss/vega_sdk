@@ -115,6 +115,7 @@ all:   build_vega_lib $(PROGRAM_ELF)
 
 clean:
 	rm -f $(BIN)/*
+	@rm -f $(SDK_PATH)/bin/$(EXECUTABLE_NAME).bin
 	@cd $(SDK_PATH)/bsp/ && ./clean.sh	
 mrproper:
 	rm -r -f $(BIN)	
@@ -132,6 +133,8 @@ $(PROGRAM_ELF): $(OBJECT_FILES_C) $(OBJECT_FILES_S)
 	@echo -n "Hex\t: $(EXECUTABLE_NAME).hex\nDump\t: $(EXECUTABLE_NAME).dump\nFiles are generated in $(BIN) folder.\n"
 	@echo -n "Size information\n"
 	@$(RISCV_SIZE) $@
+	@mkdir -p $(SDK_PATH)/bin
+	@cp $(PROGRAM_BIN) $(SDK_PATH)/bin/
 	
 $(OBJECT_FILES_C): $(BIN)/%.o: %.c
 	@echo Compiling $<

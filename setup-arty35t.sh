@@ -34,6 +34,44 @@ get_property()
  sed -rn "s/^${1}=([^\n]+)$/\1/p" $filename
 }
 
+package_install()
+{
+    echo "Checking for libraries: git, build-essential, autoconf, minicom"
+    ## Prompt the user 
+    read -p "Do you want to install missing libraries? [y/n]: " answer
+    ## Set the default value if no answer was given
+    answer=${answer:Y}
+    ## If the answer matches y or Y, install
+    [[ $answer =~ [Yy] ]] && sudo apt install ${libnames[@]}
+}
+
+
+setup_minicom()
+{
+echo "Configuring minicom & adding user to 'dialout' group"
+ echo "# Machine-generated file - use setup menu in minicom to change parameters.
+pu port             /dev/ttyUSB1
+pu baudrate         115200
+pu bits             8
+pu parity           N
+pu stopbits         1
+pu updir            $VEGA_SDK/bin
+pu rtscts           No 
+" > ~/.minirc.arty35
+mkdir -p /etc/minicom/
+sudo -i cp ~/.minirc.arty35 /etc/minicom/minirc.arty35
+sudo usermod -a -G dialout $USER
+echo "---------------------------------------------------------------------"
+echo "Minicom configured for arty35 board & user added to 'dialout' group."
+echo "Command for uart access: minicom arty35"
+echo "[If permission denied, try restart the system]"
+echo "---------------------------------------------------------------------"
+}
+
+
+libnames=("git" "build-essential" "autoconf" "minicom" )
+## Run the package_install function if sany of the libraries are missing
+dpkg -s "${libnames[@]}" >/dev/null 2>&1 || package_install
 
 echo "Setting up VEGA SDK Environment"
 
@@ -46,7 +84,10 @@ cd ./bsp && ./clean.sh > /dev/null && autoreconf -f -i
 cd ..
 make clean > /dev/null
 
+setup_minicom
+
 echo "VEGA SDK Environment added"
+
 
 vega_tool_flag=$(get_property "VEGA_TOOLS")
 
