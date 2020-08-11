@@ -45,10 +45,10 @@ UC timer_put_delay(UC timer_no, UI no_of_clocks) {
 	__asm__ __volatile__ ("fence");
 	Timer(timer_no).LoadCount = no_of_clocks;	// Load timer with no of clocks.
 	__asm__ __volatile__ ("fence");
-	Timer(timer_no).Control = 0x07;			// Enable timer with intr masked.
+	Timer(timer_no).Control = 0x03;			// Enable timer with intr unmasked
 	__asm__ __volatile__ ("fence");
 	while(Timer(timer_no).IntrStatus != 1); 	// Wait for interrupt status bit to set.
-	//wEOI = Timer(timer_no).EOI;			// Reads the EOI register to clear the intr.
+	wEOI = Timer(timer_no).EOI;			// Reads the EOI register to clear the intr.
 	return 1;
 }
 
@@ -101,7 +101,7 @@ void timer0_intr_handler(void) {
 	UI wEOI;
 	wEOI = Timer(0).EOI;			// Reads the EOI register to clear the intr.
 	// User can add their code for TImer 0 interrupt.
-	printf("\n TIMER 0 EXT intr occurred");
+	printf("\n\r TIMER 0 EXT intr occurred");
 	return;   
 }
 
@@ -117,7 +117,7 @@ void timer1_intr_handler(void) {
 	UI wEOI;
 	wEOI = Timer(1).EOI;			// Reads the EOI register to clear the intr.
 	// User can add their code for TImer 1 interrupt.
-	printf("\n TIMER 1 EXT intr occurred");
+	printf("\n\r TIMER 1 EXT intr occurred");
 	return;   
 }
 
@@ -133,7 +133,7 @@ void timer2_intr_handler(void) {
 	UI wEOI;
 	wEOI = Timer(2).EOI;			// Reads the EOI register to clear the intr.
 	// User can add their code for TImer 2 interrupt.
-	printf("\n TIMER 2 EXT intr occurred");
+	printf("\n\r TIMER 2 EXT intr occurred");
 	return;   
 }
 

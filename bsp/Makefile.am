@@ -13,6 +13,7 @@ libvega_a_SOURCES = \
 	./drivers/spi/spi.c \
 	./drivers/timer/timer.c \
 	./drivers/adc/adc.c \
+	./drivers/ext_interrupt/interrupt.c \
 	./common/stdlib.c \
 	./common/crt.S
 	
@@ -26,6 +27,7 @@ nobase_include_HEADERS = \
 	./include/uart.h \
 	./include/debug_uart.h \
 	./include/adc.h \
+	./include/interrupt.h \
 	./include/led.h \
 	./include/encoding.h \
 	./include/stdlib.h

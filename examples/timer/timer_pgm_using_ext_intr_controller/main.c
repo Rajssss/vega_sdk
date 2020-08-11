@@ -21,9 +21,11 @@
 *
 *
 ***************************************************/
-#include "adc.h"
+
 #include "stdlib.h"
 #include "config.h"
+#include "timer.h"
+#include "interrupt.h"
 
 
 
@@ -34,28 +36,27 @@
  * @param[in] No input parameter 
  * @param[Out] No output parameter 
 */
-void main (void)
+void main ()
 {
-	UI adc_data = 0;
-	while(1)
-	{
-				
-		printf("\n\r Reading ADC Channel 0 data");
-		adc_data = adc_analogRead(A0);
-		printf ("\n\r A0 data: %x ", adc_data);
+
+	//Initialise external interrupt controller
+	initialize_external_interrupt_table();
+
+
+	printf("\n\r TIMER TEST CASE - INTR Method");
+
+	timer_run_in_intr_mode(TIMER_0,0x200);
+	timer_run_in_intr_mode(TIMER_1,0x600);
+	timer_run_in_intr_mode(TIMER_2,0x800);
+
+	external_interrupt_enable(7); // For TIMER 0
+	external_interrupt_enable(8); // For TIMER 1
+	external_interrupt_enable(9); // For TIMER 2
 	
-		printf("\n\r Reading ADC Channel 1 data");
-		adc_data = adc_analogRead(A1);
-		printf ("\n\r A1 data: %x ", adc_data);
+	while(1);
+
+	return 0;
 	
-		printf("\n\r Reading ADC Channel 2 data");
-		adc_data = adc_analogRead(A2);
-		printf ("\n\r A2 data: %x ", adc_data);
-	
-		printf("\n\r Reading ADC Channel 3 data");
-		adc_data = adc_analogRead(A3);
-		printf ("\n\r A3 data: %x ", adc_data);
-	}
 }
 
 

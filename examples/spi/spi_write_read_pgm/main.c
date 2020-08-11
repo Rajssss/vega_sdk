@@ -172,6 +172,9 @@ void TestSPI_Few_Locations(UC spi_number)
 	UC abRdData[20], bStatus;
 	UI i, wDataLength, wAddress;
 
+	printf("\n SPI sample program");
+
+	while(1);
 
 	wAddress = 0x0000;
 
