@@ -8,6 +8,7 @@ libvega_a_SOURCES = \
 	./drivers/uart/uart.c \
 	./drivers/uart/debug_uart.c \
 	./drivers/gpio/gpio.c \
+	./drivers/gpio/led.c \
 	./drivers/i2c/i2c.c \
 	./drivers/spi/spi.c \
 	./drivers/timer/timer.c \
@@ -25,6 +26,7 @@ nobase_include_HEADERS = \
 	./include/uart.h \
 	./include/debug_uart.h \
 	./include/adc.h \
+	./include/led.h \
 	./include/encoding.h \
 	./include/stdlib.h
 
