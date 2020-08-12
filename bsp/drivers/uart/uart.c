@@ -123,10 +123,12 @@ void uart_putchar(UC uart_number, UC bTxCharacter, char *error) {
 	while ((UartReg(uart_number).UART_LSR & 0x20) != 0x20
 			&& (UartReg(uart_number).UART_LSR & 0x40) != 0x40)
 		; //checks whether transmitter id idle and transmitter holding register is empty , to start transmitting
+	printf("ready to txmt \n\r");
 	UartReg(uart_number).UART_DR = bTxCharacter;
 	__asm__ __volatile__ ("fence");
 	while ((UartReg(uart_number).UART_LSR & 0x20) != 0x20)
 		;
+	printf("\n tx complete \n\r");
 	if ((UartReg(uart_number).UART_LSR & 0x04) == 0x04) {
 			//printf("ParityError\n\r");
 			*error = UART_PARITY_ERROR;
@@ -155,6 +157,7 @@ UC uart_getchar(UC uart_number, char *error) {
 
 	while ((UartReg(uart_number).UART_LSR & 0x01) != 0x01)
 		; //waiting for data
+	printf("ready to receive \n\r");
 	Rxd_data = UartReg(uart_number).UART_DR; //
 
 	if ((UartReg(uart_number).UART_LSR & 0x04) == 0x04) {
@@ -168,7 +171,6 @@ UC uart_getchar(UC uart_number, char *error) {
 		*error = UART_FRAMING_ERROR;
 	} else
 		*error = UART_NO_ERROR; //no error
-
 	return Rxd_data;
 }
 

@@ -23,15 +23,11 @@
 #include "stdlib.h"
 #include "config.h"
 
-
 /**
  @fn main
  @brief transmit and reception through uart
  @details 1 character is transmitted and received through uart
- @param[in] unsigned char(uart_number)
- @param[in] unsigned long(Baud_rate)
- @param[in] unsigned long(frame_value)
- @param[in] unsigned long(Uart_clock)
+ @param[in] No input parameter.
  @param[Out] No ouput parameter.
  @return Void function.
 
@@ -39,38 +35,42 @@
 void main() {
 	char error;
 	UC data;
-	uart_configure(0, 9600, 83, 100000);
-
+	printf("testing uart \n\r");
 	uart_putchar(0, 't', &error);
 	if (error) {
 		switch (error) {
-		case (char)UART_PARITY_ERROR:
+		case (char) UART_PARITY_ERROR:
 			printf("Parity Error\n\r");
 			break;
-		case (char)UART_OVERRUN_ERROR:
+		case (char) UART_OVERRUN_ERROR:
 			printf("Overrun Error\n\r");
 			break;
-		case (char)UART_FRAMING_ERROR:
+		case (char) UART_FRAMING_ERROR:
 			printf("Framing Error\n\r");
 			break;
 		}
 	} else
 		printf("no error\n\r");
-
+	printf("press any key \n\r");
 	data = uart_getchar(0, &error);
 	if (error) {
 		switch (error) {
-		case (char)UART_PARITY_ERROR:
+		case (char) UART_PARITY_ERROR:
 			printf("Parity Error\n\r");
 			break;
-		case (char)UART_OVERRUN_ERROR:
+		case (char) UART_OVERRUN_ERROR:
 			printf("Overrun Error\n\r");
 			break;
-		case (char)UART_FRAMING_ERROR:
+		case (char) UART_FRAMING_ERROR:
 			printf("Framing Error\n\r");
 			break;
 		}
 	} else
 		printf("no error\n\r");
+	printf("data is %d", data);
+	printf("\n\r");
+	printf("success\n\r");
+	while (1)
+		;
 }
 
