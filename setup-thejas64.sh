@@ -2,7 +2,7 @@
 #Project Name		: MDP - Microprocessor Development Project
 #Project Code		: HD083D
 #Created		: 07-Jan-2020
-#Filename		: setup-arty100t.sh
+#Filename		: setup-thejas64.sh
 #Purpose		: Environment script
 #Description		: 
 #Author(s)		: Premjith A V
@@ -57,13 +57,13 @@ pu parity           N
 pu stopbits         1
 pu updir            $VEGA_SDK/bin
 pu rtscts           No 
-" > ~/.minirc.arty100
+" > ~/.minirc.thejas64
 mkdir -p /etc/minicom/
-sudo -i cp ~/.minirc.arty100 /etc/minicom/minirc.arty100
+sudo -i cp ~/.minirc.thejas64 /etc/minicom/minirc.thejas64
 sudo usermod -a -G dialout $USER
 echo "---------------------------------------------------------------------"
-echo "Minicom configured for arty100 board & user added to 'dialout' group."
-echo "Command for uart access: minicom arty100"
+echo "Minicom configured for thejas64 hardware & user added to 'dialout' group."
+echo "Command for uart access: minicom thejas64"
 echo "[If permission denied, try restart the system]"
 echo "---------------------------------------------------------------------"
 }
@@ -77,7 +77,7 @@ dpkg -s "${libnames[@]}" >/dev/null 2>&1 || package_install
 echo "Setting up VEGA SDK Environment"
 
 set_property "VEGA_SDK" "$VEGA_SDK"
-set_property "VEGA_MACHINE" "ARTY100"
+set_property "VEGA_MACHINE" "THEJAS64"
 
 
 
