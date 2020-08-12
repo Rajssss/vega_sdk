@@ -52,7 +52,7 @@ typedef struct ext_intr_reg
 * 
 *
 ***************************************************/
-
+void enable_irq(void);
 void external_interrupt_enable(UC intr_number);
 void initialize_external_interrupt_table(void);
 void external_interrupt_handler(void);

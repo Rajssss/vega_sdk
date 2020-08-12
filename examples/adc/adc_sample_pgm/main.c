@@ -21,10 +21,10 @@
 *
 *
 ***************************************************/
-
+#include "adc.h"
 #include "stdlib.h"
 #include "config.h"
-#include "timer.h"
+
 
 
 /** @fn main
@@ -34,25 +34,28 @@
  * @param[in] No input parameter 
  * @param[Out] No output parameter 
 */
-void main ()
+void main (void)
 {
-	UC intr = 0;
-
+	UI adc_data = 0;
+	while(1)
+	{
+				
+		printf("\n\r Reading ADC Channel 0 data");
+		adc_data = adc_analogRead(A0);
+		printf ("\n\r A0 data: %x ", adc_data);
 	
-	printf("\n\r TIMER 0 ");
-	intr = timer_put_delay(TIMER_0,0x200);			
-	printf("\n\r TIMER 0 intr occurred");
-		
-	printf("\n\r TIMER 1 ");
-	intr = timer_put_delay(TIMER_1,0x350);
-	printf("\n\r TIMER 1 intr occurred");
-
-	printf("\n\r TIMER 2 ");
-	intr = timer_put_delay(TIMER_2,0x500);	
-	printf("\n\r TIMER 2 intr occurred");	
-
-	while(1);
+		printf("\n\r Reading ADC Channel 1 data");
+		adc_data = adc_analogRead(A1);
+		printf ("\n\r A1 data: %x ", adc_data);
 	
+		printf("\n\r Reading ADC Channel 2 data");
+		adc_data = adc_analogRead(A2);
+		printf ("\n\r A2 data: %x ", adc_data);
+	
+		printf("\n\r Reading ADC Channel 3 data");
+		adc_data = adc_analogRead(A3);
+		printf ("\n\r A3 data: %x ", adc_data);
+	}
 }
 
 

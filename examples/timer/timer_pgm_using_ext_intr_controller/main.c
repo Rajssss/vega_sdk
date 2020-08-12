@@ -25,6 +25,8 @@
 #include "stdlib.h"
 #include "config.h"
 #include "timer.h"
+#include "interrupt.h"
+
 
 
 /** @fn main
@@ -36,22 +38,24 @@
 */
 void main ()
 {
-	UC intr = 0;
 
+	//Initialise external interrupt controller
+	initialize_external_interrupt_table();
+
+
+	printf("\n\r TIMER TEST CASE - INTR Method");
+
+	timer_run_in_intr_mode(TIMER_0,0x200);
+	timer_run_in_intr_mode(TIMER_1,0x600);
+	timer_run_in_intr_mode(TIMER_2,0x800);
+
+	external_interrupt_enable(7); // For TIMER 0
+	external_interrupt_enable(8); // For TIMER 1
+	external_interrupt_enable(9); // For TIMER 2
 	
-	printf("\n\r TIMER 0 ");
-	intr = timer_put_delay(TIMER_0,0x200);			
-	printf("\n\r TIMER 0 intr occurred");
-		
-	printf("\n\r TIMER 1 ");
-	intr = timer_put_delay(TIMER_1,0x350);
-	printf("\n\r TIMER 1 intr occurred");
-
-	printf("\n\r TIMER 2 ");
-	intr = timer_put_delay(TIMER_2,0x500);	
-	printf("\n\r TIMER 2 intr occurred");	
-
 	while(1);
+
+	return 0;
 	
 }
 
