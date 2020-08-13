@@ -46,8 +46,8 @@ void main ()
 	printf("\n\r TIMER TEST CASE - INTR Method");
 
 	timer_run_in_intr_mode(TIMER_0,0x200);
-	timer_run_in_intr_mode(TIMER_1,0x600);
-	timer_run_in_intr_mode(TIMER_2,0x800);
+	timer_run_in_intr_mode(TIMER_1,0x300);
+	timer_run_in_intr_mode(TIMER_2,0x500);
 
 	external_interrupt_enable(7); // For TIMER 0
 	external_interrupt_enable(8); // For TIMER 1

@@ -28,6 +28,8 @@
 #include <include/config.h>
 #include <include/encoding.h>
 
+
+extern EXT_INTR_Handler_0;
 fp external_interrupt_table[64];
 
 
@@ -72,12 +74,14 @@ void initialize_external_interrupt_table(void)
 	enable_irq();
 
 #if __riscv_xlen == 64
-	write_csr(mtvec,(UL)external_interrupt_handler);
+	//write_csr(mtvec,(UL)external_interrupt_handler);
+	write_csr(mtvec,(UL)&EXT_INTR_Handler_0);
 	external_interrupt_table[10] = timer0_intr_handler; 
 	external_interrupt_table[11] = timer1_intr_handler; 
 	external_interrupt_table[12] = timer2_intr_handler;
 #else
-	write_csr(mtvec,(UI)external_interrupt_handler);
+	//write_csr(mtvec,(UI)external_interrupt_handler);
+	write_csr(mtvec,(UI)&EXT_INTR_Handler_0);
 	external_interrupt_table[7] = timer0_intr_handler; 
 	external_interrupt_table[8] = timer1_intr_handler; 
 	external_interrupt_table[9] = timer2_intr_handler;
