@@ -29,30 +29,30 @@
 SPIcntrlRegType gSPItransfer;
 
 
-/*@fn SPI_init
-  @brief Initialize SPI.
+/** @fn SPI_init
+  @brief Initialize SPI controller.
   @details Initialise SPI with the default setting.
   @warning 
   @param[in]  unsigned char spi_number: Denotes the selected SPI.
   @param[Out] No output parameter 
 */
+
 void SPI_init(UC spi_number) {
 
 	UC rx = 0;
 	UI reg_data = 0;
 
-	SPIreg(spi_number).Baudrate = SPI_BAUD_CFD_16;
+	SPIreg(spi_number).Baudrate = SPI_BAUD_CFD_16;		// Baud divisor
 
-	gSPItransfer.Bits.Dbits = BPT_8;
-	gSPItransfer.Bits.CSAAT = LOW;
+	gSPItransfer.Bits.Dbits = BPT_8;			// Bits per transfer set to 8.	
+	gSPItransfer.Bits.CSAAT = LOW;				// CSAAT signal is low.
 
-	gSPItransfer.Bits.SPIrxTxIntr = RX_TX_INTR_DIS;
+	gSPItransfer.Bits.SPIrxTxIntr = RX_TX_INTR_DIS;		// Both Rx & Tx interrupts disabled.
 
-	gSPItransfer.Bits.Mode = SPI_MODE_0;
-	gSPItransfer.Bits.DataOrder = MSB;
-	gSPItransfer.Bits.Periph = 0;
-	gSPItransfer.Bits.PeriphCS = 0;
-
+	gSPItransfer.Bits.Mode = SPI_MODE_0;			// Mode set as '0'.
+	gSPItransfer.Bits.DataOrder = MSB;			// MSB bit is transferred first.
+	gSPItransfer.Bits.Periph = 0;				// Peripheral type is Fixed peripheral.
+	gSPItransfer.Bits.PeriphCS = 0;				// Peripheral chip select is '0'.
 
 	SPIreg(spi_number).Control.hword = gSPItransfer.Value;	// Update value to register
 	__asm__ __volatile__ ("fence");
@@ -60,8 +60,8 @@ void SPI_init(UC spi_number) {
 }
 
 
-/* @fn SPI_config
- @brief Customise the SPI init setting.
+/** @fn SPI_config
+ @brief Customise the SPI controller's initialize setting.
  @details Read the details below.
  
 SPI Control word details
@@ -97,10 +97,10 @@ SPI Clock configuration Modes
 -------------------------------------------------
 | SPI-mode   |  CPOL(bit - 5)	|  CPHA(bit - 4)|	
 -------------------------------------------------
-|   0	     |	    0		    |	0			|
-|   1	     |	    0			|	1			|
-|   2        |	    1			|	0			|
-|   3	     |	    1			|	1			|
+|   0	     |	    0		|	0	|
+|   1	     |	    0		|	1	|
+|   2        |	    1		|	0	|
+|   3	     |	    1		|	1	|
 -------------------------------------------------
 
 
@@ -112,10 +112,10 @@ SPI Clock configuration Modes
 ---------------------------------------------------------
 | PCS1 (bit - 1) |     PCS1 (bit - 0)   |        CS     |	
 ---------------------------------------------------------
-|   0	         |	    0				|	1110		|
-|   0	         |	    1				|	1101		|
-|   1            |	    0				|	1011		|
-|   1	         |	    1				|	0111		|
+|   0	         |	    0		|	1110	|
+|   0	         |	    1		|	1101	|
+|   1            |	    0		|	1011	|
+|   1	         |	    1		|	0111	|
 ---------------------------------------------------------
 
 @warning 
@@ -133,23 +133,23 @@ void SPI_config(UC spi_number, US cword) {
 	return;
 }
 
-/*@fn SPI_set_baud
+/** @fn SPI_set_baud
  @brief Set the baud frequency divider value to SPI controller baud register.
  @details 
 -------------------------------------------------
 | 	BAUD   		|  	CLk freq Divider |	
 -------------------------------------------------
-|   0	     		|	    4		 |	
-|   1	     		|	    8		 |	
-|   2        		|	    16		 |	
-|   3				|	    32		 |
-|	4				|	    64		 |		
-|	5				|	    128		 |		
-|	6				|	    256		 |
-|	7				|	    512		 |
-|	8				|	    1024	 |
-|	9				|	    2048	 |
-|	10-15	     	|	    reserved |	
+|     	0	     	|	    4		 |	
+|   	1	     	|	    8		 |	
+|   	2        	|	    16		 |	
+|   	3		|	    32		 |
+|	4		|	    64		 |		
+|	5		|	    128		 |		
+|	6		|	    256		 |
+|	7		|	    512		 |
+|	8		|	    1024	 |
+|	9		|	    2048	 |
+|	10-15	     	|	    reserved 	 |	
 -------------------------------------------------
  @warning 
  @param[in]  unsigned char spi_number: Denotes the selected SPI, 
@@ -158,12 +158,12 @@ void SPI_config(UC spi_number, US cword) {
 */
 void SPI_set_baud(UC spi_number,UC bBaudCFD) {
 
-	SPIreg(spi_number).Baudrate = (bBaudCFD <<4);
+	SPIreg(spi_number).Baudrate = (bBaudCFD <<4);  //Set the baud frequency divider value
 	__asm__ __volatile__ ("fence");
 	return;
 }
 
-/*@fn SPI_get_slave_select
+/** @fn SPI_get_slave_select
  @brief Read the slave select value.
  @details Read the slave select value at bit positions 16 and 17.
  @warning 
@@ -173,18 +173,18 @@ void SPI_set_baud(UC spi_number,UC bBaudCFD) {
 UI SPI_get_slave_select(UC spi_number) {
 	UI read_data = 0;
 
-	read_data = SPIreg(spi_number).RxData;
-	read_data = ((read_data & 0x30000) >> 16);
+	read_data = SPIreg(spi_number).RxData;		// Read SPI RX data reg value.
+	read_data = ((read_data & 0x30000) >> 16);	// Extract the value at bit positions 16 & 17.
 	return read_data;
 }
 
-/*@fn SPI_set_slave_select
+/** @fn SPI_set_slave_select
  @brief Write the slave select value.
  @details Write the slave select value at bit positions 16 and 17.
  @warning 
- @param[in] unsigned char spi_number: Denotes the selected SPI, 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
             unsigned int slave_sel_val: The Slave select bits.
- @param[Out] slave select value as 32 bit data 
+ @param[Out] No output parameter
 */
 void SPI_set_slave_select(UC spi_number ,UI slave_sel_val) {
 
@@ -195,7 +195,7 @@ void SPI_set_slave_select(UC spi_number ,UI slave_sel_val) {
 	return;
 }
 
-/*@fn SPI_check_overrun
+/** @fn SPI_check_overrun
  @brief  Checks for overrun
  @details Checks if overrun occurred or not by reading SPI controller's status register.
  @warning 
@@ -213,7 +213,7 @@ UC SPI_check_overrun(UC spi_number)
 		return 0;
 }
 
-/*@fn SPI_enable_intr
+/** @fn SPI_enable_intr
  @brief  Enable SPI interrupts.
  @details Enable the SPI tx and Rx interrupt.
  @warning 
@@ -235,7 +235,7 @@ void SPI_enable_intr(UC spi_number,UC tx_intr,UC rx_intr)
 	return;
 }
 
-/*@fn SPI_receive
+/** @fn SPI_receive
  @brief  Read data.
  @details Read data (16 bit) received in Read data register of SPI controller.
  @warning 
@@ -247,14 +247,12 @@ US SPI_receive(UC spi_number)
 	US bRxData;
 	UC status = 0;
 	
-	while(!((SPIreg(spi_number).Status) & SPI_RX_COMPLETE_BIT));			//  Waiting for RX complete bit to set.
-
-	bRxData = SPIreg(spi_number).RxData;
-
+	while(!((SPIreg(spi_number).Status) & SPI_RX_COMPLETE_BIT));	//  Waiting for RX complete bit to set.
+	bRxData = SPIreg(spi_number).RxData;				//  Read data.
 	return bRxData;
 }
 
-/*@fn SPI_transmit
+/** @fn SPI_transmit
  @brief  Write data.
  @details Writes data (16 bit) to transmit data register of SPI controller.
  @warning 
@@ -264,28 +262,25 @@ US SPI_receive(UC spi_number)
 */
 void SPI_transmit(UC spi_number,US bData) {
 
-	SPI_wait_if_busy(spi_number);
-
-	while (!(SPIreg(spi_number).Status & SPI_TX_HOLD_EMPTY_BIT));
-
-	SPIreg(spi_number).TxData = bData;		// Write the data (can be a command or actual data to be written to spi device)
+	SPI_wait_if_busy(spi_number);					// Checking if SPI controller is busy or not. Waits if busy.
+	while (!(SPIreg(spi_number).Status & SPI_TX_HOLD_EMPTY_BIT));	// Check Tx Hold empty bit is set or not. If not wait here.
+	SPIreg(spi_number).TxData = bData;				// Write the data (can be a command or actual data to be written to spi device)
 	__asm__ __volatile__ ("fence");
-
 	return;
 }
 
 
-/*@fn SPI_0_intr_handler
+/** @fn SPI_0_intr_handler
  @brief  Interrupt handler.
- @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @details Reads SPI controllers status register to distinguish which type of interrupt has occurred.
  @warning 
- @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[in] No input parameter.
  @param[Out] No output parameter. 
 */
 void SPI_0_intr_handler(void) {
 	UC status = 0;
 
-	status = SPIreg(0).Status;
+	status = SPIreg(0).Status;	//Read SPI 0 status register.
 	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
 	{
 		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
@@ -297,9 +292,9 @@ void SPI_0_intr_handler(void) {
 }
 
 
-/*@fn SPI_0_intr_handler
+/** @fn SPI_1_intr_handler
  @brief  Interrupt handler.
- @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @details Reads SPI controllers status register to distinguish which type of interrupt has occurred.
  @warning 
  @param[in] unsigned char spi_number: Denotes the selected SPI.
  @param[Out] No output parameter. 
@@ -307,7 +302,7 @@ void SPI_0_intr_handler(void) {
 void SPI_1_intr_handler(void) {
 	UC status = 0;
 
-	status = SPIreg(1).Status;
+	status = SPIreg(1).Status;	//Read SPI 1 status register.
 	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
 	{
 		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
@@ -319,9 +314,9 @@ void SPI_1_intr_handler(void) {
 }
 
 
-/*@fn SPI_0_intr_handler
+/** @fn SPI_2_intr_handler
  @brief  Interrupt handler.
- @details Reads SPI controllers status register to distinguish which type of interru[t has occurred.
+ @details Reads SPI controllers status register to distinguish which type of interrupt has occurred.
  @warning 
  @param[in] unsigned char spi_number: Denotes the selected SPI.
  @param[Out] No output parameter. 
@@ -329,7 +324,7 @@ void SPI_1_intr_handler(void) {
 void SPI_2_intr_handler(void) {
 	UC status = 0;
 
-	status = SPIreg(2).Status;
+	status = SPIreg(2).Status; //Read SPI 2 status register.
 	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
 	{
 		//spi_handle_rx_intr(); // Funcion pointer for rx intr.
@@ -340,7 +335,7 @@ void SPI_2_intr_handler(void) {
 	}   
 }
 
-/*@fn SPI_wait_if_busy
+/** @fn SPI_wait_if_busy
  @brief  Checks if SPI controller is busy.
  @details Reads SPI controllers status register to check its busy status. Waits here untill it becomes free.
  @warning 
@@ -349,12 +344,12 @@ void SPI_2_intr_handler(void) {
 */
 void SPI_wait_if_busy(UC spi_number) {
 
-	while (SPIreg(spi_number).Status & SPI_BUSY_BIT);
+	while (SPIreg(spi_number).Status & SPI_BUSY_BIT); // Read SPI controller status register to check if its busy or not.
 	return ;   
 }
 
 
-/*@fn SPI_set_CSAAT_pin
+/** @fn SPI_set_CSAAT_pin
  @brief  Set CSAAT pin high/low.
  @details Sets Chip Select Active After Transfer pin high : This pin must be high when the command/data is more than one byte
  and pin must be lowered when the command/data is over.
@@ -376,7 +371,7 @@ void SPI_set_CSAAT_pin(UC spi_number, UC status) {
 
 
 
-/*@fn SPI_read_rx_reg
+/** @fn SPI_read_rx_reg
  @brief  Read data.
  @details Read data (16 bit) received in Read data register of SPI controller.
  @warning 
@@ -386,13 +381,11 @@ void SPI_set_CSAAT_pin(UC spi_number, UC status) {
 US SPI_read_rx_reg(UC spi_number)
 {
 	US bRxData;
-	
-	bRxData = SPIreg(spi_number).RxData;
-
+	bRxData = SPIreg(spi_number).RxData;	// Read SPI data reg value.
 	return bRxData;
 }
 
-/*@fn SPI_transmit
+/** @fn SPI_write_tx_reg
  @brief  Write data.
  @details Writes data (16 bit) to transmit data register of SPI controller.
  @warning 
@@ -402,13 +395,10 @@ US SPI_read_rx_reg(UC spi_number)
 */
 void SPI_write_tx_reg(UC spi_number,US bData) {
 
-	SPI_wait_if_busy(spi_number);
-
-	while (!(SPIreg(spi_number).Status & SPI_TX_HOLD_EMPTY_BIT));
-
-	SPIreg(spi_number).TxData = bData;		// Write the data (can be a command or actual data to be written to spi device)
+	SPI_wait_if_busy(spi_number);					// Checking if SPI controller is busy or not. Waits if busy.
+	while (!(SPIreg(spi_number).Status & SPI_TX_HOLD_EMPTY_BIT));	// Check Tx Hold empty bit is set or not. If not wait here.
+	SPIreg(spi_number).TxData = bData;				// Write the data (can be a command or actual data to be written to spi device)
 	__asm__ __volatile__ ("fence");
-
 	return;
 }
 

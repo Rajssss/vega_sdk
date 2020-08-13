@@ -29,10 +29,8 @@
 
 
 /** @fn main
- * @brief Lit all leds based on the switch status.
- * @details In this pgm the GPIO_0 pins from 1 to 7 are configured as OUTPUT and assumes that LEDs are connected in those pins.
-	    And the pins 8 to 15 are configured as as INPUT and assumes that switches are connected there. 
-	    This pgm continuosly reads the status of switches and either lits or turns off leds based on the value read from switch.
+ * @brief Toggle leds LD5,LD6 & LD7.
+ * @details Toggle LEDs at finite intervals.
  * @warning 
  * @param[in] No input parameter 
  * @param[Out] No output parameter 
@@ -41,7 +39,7 @@ void main ()
 {
 	US sw_status = 0;
 	UI i = 0;
-	printf("\n\r Please check the LED5,LED6 and LED7 status on Dev. Board");
+	printf("\n\r Please check the LD5,LD6 and LD7 status on Dev. Board");
 	while(1)
 	{
 		//Turn ON LEDs 5, 6, 7 at GPIO pins 16,17,18 respectively.

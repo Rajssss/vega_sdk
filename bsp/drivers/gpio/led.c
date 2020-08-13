@@ -1,7 +1,7 @@
 /***************************************************************************
  * Project                               :  MDP
- * Name of the file                      :  gpio.c
- * Brief Description of file             :  Driver to control the GPIO.
+ * Name of the file                      :  led.c
+ * Brief Description of file             :  Driver to control the LEDs.
  * Name of Author                        :  Sreeju G R
  * Email ID                              :  sreeju@cdac.in
 
@@ -63,7 +63,7 @@ void off_LED(US pin_no) {
 */
 US read_switch(US pin_no) {
 	US sw_status = 0;	
-	sw_status = GPIO_read_pin(pin_no);
+	sw_status = GPIO_read_pin(pin_no); // Read the pin status.
 	return sw_status;
 }
 

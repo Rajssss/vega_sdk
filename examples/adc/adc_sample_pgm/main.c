@@ -28,8 +28,8 @@
 
 
 /** @fn main
- * @brief Generate a delay in polling mode.
- * @details In this pgm the timers0,timers1 & timers2 are loaded with values and waits for interrupt in polling mode.
+ * @brief Read all ADC channel values and display it via UART..
+ * @details 
  * @warning 
  * @param[in] No input parameter 
  * @param[Out] No output parameter 

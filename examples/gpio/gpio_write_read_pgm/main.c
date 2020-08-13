@@ -31,10 +31,8 @@
 
 
 /** @fn main
- * @brief Lit all leds based on the switch status.
- * @details In this pgm the GPIO_0 pins from 1 to 7 are configured as OUTPUT and assumes that LEDs are connected in those pins.
-	    And the pins 8 to 15 are configured as as INPUT and assumes that switches are connected there. 
-	    This pgm continuosly reads the status of switches and either lits or turns off leds based on the value read from switch.
+ * @brief Lit leds based on the switch status.
+ * @details In this pgm SW2 (MSB), SW1,SW0 (LSB) are considered for turning LEDs LD0,LD1,LD5,LD6 & LD7 ON & OFF.
  * @warning 
  * @param[in] No input parameter 
  * @param[Out] No output parameter 
@@ -49,27 +47,24 @@ void main ()
 	while(1)
 	{
 		repeat = 0;
-		#ifdef DISP_ON
-			printf("\n\r   *************");
-			printf("\n\r   GPIO TEST PGM");
-			printf("\n\r   *************");
-			printf("\n\r   ********************************************************");
-			printf("\n\r   SW2(MSB)    SW1      SW0(LSB)         LED STATUS");
-			printf("\n\r   ********************************************************");
-			printf("\n\r   0            0         0              ALL LEDs OFF   ");
-			printf("\n\r   0            0         1              LD0 (RED)   ");
-			printf("\n\r   0            1         0              LD0 (GREEN)   ");
-			printf("\n\r   0            1         1              LD0 (BLUE)   ");
+		
+		printf("\n\r   *************");
+		printf("\n\r   GPIO TEST PGM");
+		printf("\n\r   *************");
+		printf("\n\r   ********************************************************");
+		printf("\n\r   SW2(MSB)    SW1      SW0(LSB)         LED STATUS");
+		printf("\n\r   ********************************************************");
+		printf("\n\r   0            0         0              ALL LEDs OFF   ");
+		printf("\n\r   0            0         1              LD0 (RED)   ");
+		printf("\n\r   0            1         0              LD0 (GREEN)   ");
+		printf("\n\r   0            1         1              LD0 (BLUE)   ");
 
-			printf("\n\r   1            0         0              LD1 (RED)   ");
-			printf("\n\r   1            0         1              LD1 (GREEN)   ");
-			printf("\n\r   1            1         0              LD1 (BLUE)   ");
-			printf("\n\r   1            1         1              LD16,17,18 are ON  ");
-			printf("\n\r   ********************************************************");
-		#endif
-
-
-
+		printf("\n\r   1            0         0              LD1 (RED)   ");
+		printf("\n\r   1            0         1              LD1 (GREEN)   ");
+		printf("\n\r   1            1         0              LD1 (BLUE)   ");
+		printf("\n\r   1            1         1              LD5,LD6,LD7 are ON  ");
+		printf("\n\r   ********************************************************");
+		
 		printf("\n\r ***************************************************************************");
 		printf("\n\r INFO: Now Use Slide Switches SW2(MSB), SW1, SW0(LSB) to try various combinations");
 		printf("\n\r INFO: Program will reset on the switch combination 1 1 1");
@@ -249,8 +244,7 @@ void main ()
 				GPIO_write_pin(16,ON_LED);
 				GPIO_write_pin(17,ON_LED);
 				GPIO_write_pin(18,ON_LED);
-				repeat = 1;
-				
+				repeat = 1;			
 			}
 		}
 	}

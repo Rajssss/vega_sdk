@@ -31,7 +31,7 @@
 
 /** @fn main
  * @brief Generate a delay in polling mode.
- * @details In this pgm the timers0,timers1 & timers2 are loaded with values and waits for interrupt in polling mode.
+ * @details In this pgm the timers0,timers1 & timers2 are loaded with values and enabled.
  * @warning 
  * @param[in] No input parameter 
  * @param[Out] No output parameter 
@@ -42,11 +42,10 @@ void main ()
 	//Initialise external interrupt controller
 	initialize_external_interrupt_table();
 
-
 	printf("\n\r TIMER TEST CASE - INTR Method");
 
 	timer_run_in_intr_mode(TIMER_0,0x200);
-	timer_run_in_intr_mode(TIMER_1,0x300);
+	timer_run_in_intr_mode(TIMER_1,0x350);
 	timer_run_in_intr_mode(TIMER_2,0x500);
 
 	external_interrupt_enable(7); // For TIMER 0
@@ -54,8 +53,6 @@ void main ()
 	external_interrupt_enable(9); // For TIMER 2
 	
 	while(1);
-
-	return 0;
 	
 }
 

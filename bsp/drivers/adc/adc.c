@@ -1,7 +1,7 @@
 /***************************************************************************
  * Project                               :  MDP
  * Name of the file                      :  adc.c
- * Brief Description of file             :  Driver to control the ADC.
+ * Brief Description of file             :  Driver to read the ADC valu.
  * Name of Author                        :  Sreeju G R
  * Email ID                              :  sreeju@cdac.in
 
@@ -27,15 +27,12 @@
 #include <include/adc.h>
 #include <include/config.h>
 
-
-
-
-/* @fn adc_analogRead
-  @brief  Enable external interrupt.
-  @details The selected timer is loaded with the no of clocks and it is enabled with intr unmasked. The timer module waits untill it interrupts.
+/** @fn adc_analogRead
+  @brief  Read ADC value.
+  @details The selected ADC returns the value as 32 bit data.
   @warning 
-  @param[in] unsigned char adc_channel_number: The channel number from where adc value to be read.
-  @param[Out] unsigned int : read adc data..
+  @param[in] unsigned char adc_channel_number: The channel number from where ADC value to be read.
+  @param[Out] unsigned int : read adc_data.
 */
 
 UI adc_analogRead(UC adc_channel_number)
@@ -46,29 +43,29 @@ UI adc_analogRead(UC adc_channel_number)
 		switch (adc_channel_number)
 		{
 			case 0:
-				ADCReg.address_reg = 0x14;
-				while((ADCReg.status_reg & 0x1) != 0x1);
-				adc_data = ADCReg.data_reg;
+				ADCReg.address_reg = 0x14;			// Address of A0
+				while((ADCReg.status_reg & 0x1) != 0x1);	// Waiting for ADC status reg LSB to set.
+				adc_data = ADCReg.data_reg;			// Read ADC data.
 				break;
 			case 1:
-				ADCReg.address_reg = 0x15;
-				while((ADCReg.status_reg & 0x1) != 0x1);
-				adc_data = ADCReg.data_reg;
-				break;
+				ADCReg.address_reg = 0x15;			// Address of A1
+				while((ADCReg.status_reg & 0x1) != 0x1);	// Waiting for ADC status reg LSB to set.
+				adc_data = ADCReg.data_reg;			// Read ADC data.
+				break;	
 			case 2:
-				ADCReg.address_reg = 0x16;
-				while((ADCReg.status_reg & 0x1) != 0x1);
-				adc_data = ADCReg.data_reg;
+				ADCReg.address_reg = 0x16;			// Address of A2
+				while((ADCReg.status_reg & 0x1) != 0x1);	// Waiting for ADC status reg LSB to set.
+				adc_data = ADCReg.data_reg;			// Read ADC data.
 				break;
 			case 3:
-				ADCReg.address_reg = 0x17;
-				while((ADCReg.status_reg & 0x1) != 0x1);
-				adc_data = ADCReg.data_reg;
+				ADCReg.address_reg = 0x17;			// Address of A3
+				while((ADCReg.status_reg & 0x1) != 0x1);	// Waiting for ADC status reg LSB to set.
+				adc_data = ADCReg.data_reg;			// Read ADC data.
 				break;
 			default:
 				break;
 		}
-		return adc_data;
+		return adc_data;						// return read data.
 	}
 }
 
