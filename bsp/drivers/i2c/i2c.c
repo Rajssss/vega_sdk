@@ -86,6 +86,7 @@ UC i2c_start(UC i2c_number, UC read_length, UC Read) {
 
 	__asm__ __volatile__ ("fence");
 	printf("CR is %x",I2CReg(i2c_number).I2C_CR);
+	printf("\n\r");
 	while ((I2CReg(i2c_number).I2C_SR0 & 0x01) != 0x01)
 		; //check start sequence initiated
 	return 0;

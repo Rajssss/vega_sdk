@@ -35,7 +35,7 @@
 void main() {
 
 	printf("I2C EEPROM-24aa64\n\r");
-	i2c_configure(0, 25000000, 100000); //System clock =25MHz and I2C clock =100 kHz
+	//i2c_configure(0, 25000000, 100000); //System clock =25MHz and I2C clock =100 kHz
 	//i2c_initialize(0);
 
 	printf("I2C EEPROM Write started 1 byte \n\r");
@@ -133,8 +133,8 @@ void i2c_WriteByte_EEPROM(UC i2c_num, UC WBdata, US Word_Address,
 
 /**
  @fn i2c_ReadByte_EEPROM
- @brief writes a byte of data to EEPROM with I2C interface
- @details write 1 byte data after writing slave address and word address
+ @brief reads a byte of data to EEPROM with I2C interface
+ @details reads 1 byte data after writing slave address and word address
  @param[in] unsigned char(i2c_number--which i2c to be used)
  @param[in] unsigned short (Slave_Address_Wr--Slave address for write)
  @param[in] unsigned short (Slave_Address_Rd--Slave address for read)
@@ -240,7 +240,7 @@ void i2c_WriteMultiByte_EEPROM(UC i2c_num, UC *WBdata, US Word_Address,
  @param[in] unsigned char (Slave_Address_Rd--Slave address for read)
  @param[in] unsigned short (Word_Address--starting word address)
  @param[in] unsigned long (read_data_length--no:of bytes to be read)
- @param[Out] unsigned char (rxd_data)
+ @param[Out] unsigned char (*rxd_data)
  @return Void function.
 
  */

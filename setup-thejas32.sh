@@ -2,7 +2,7 @@
 #Project Name		: MDP - Microprocessor Development Project
 #Project Code		: HD083D
 #Created		: 07-Jan-2020
-#Filename		: setup-arty100t.sh
+#Filename		: setup-thejas32.sh
 #Purpose		: Environment script
 #Description		: 
 #Author(s)		: Premjith A V
@@ -57,13 +57,13 @@ pu parity           N
 pu stopbits         1
 pu updir            $VEGA_SDK/bin
 pu rtscts           No 
-" > ~/.minirc.arty100
+" > ~/.minirc.thejas32
 mkdir -p /etc/minicom/
-sudo -i cp ~/.minirc.arty100 /etc/minicom/minirc.arty100
+sudo -i cp ~/.minirc.thejas32 /etc/minicom/minirc.thejas32
 sudo usermod -a -G dialout $USER
 echo "---------------------------------------------------------------------"
-echo "Minicom configured for arty100 board & user added to 'dialout' group."
-echo "Command for uart access: minicom arty100"
+echo "Minicom configured for thejas32 hardware & user added to 'dialout' group."
+echo "Command for uart access: minicom thejas32"
 echo "[If permission denied, try restart the system]"
 echo "---------------------------------------------------------------------"
 }
@@ -73,11 +73,10 @@ libnames=("git" "build-essential" "autoconf" "minicom" )
 ## Run the package_install function if sany of the libraries are missing
 dpkg -s "${libnames[@]}" >/dev/null 2>&1 || package_install
 
-
 echo "Setting up VEGA SDK Environment"
 
 set_property "VEGA_SDK" "$VEGA_SDK"
-set_property "VEGA_MACHINE" "ARTY100"
+set_property "VEGA_MACHINE" "THEJAS32"
 
 
 
@@ -88,6 +87,7 @@ make clean > /dev/null
 setup_minicom
 
 echo "VEGA SDK Environment added"
+
 
 vega_tool_flag=$(get_property "VEGA_TOOLS")
 

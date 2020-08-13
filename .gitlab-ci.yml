@@ -17,7 +17,7 @@ after_script:
 build1:
   stage: build
   script:
-    - ./setup-arty35t.sh
+    - ./setup-thejas32.sh
     - make 
 
 test1:
@@ -29,7 +29,7 @@ test1:
 build2:
   stage: build
   script:
-    - ./setup-arty100t.sh
+    - ./setup-thejas64.sh
     - make 
 
 test2:
