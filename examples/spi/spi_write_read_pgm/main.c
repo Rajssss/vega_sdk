@@ -57,7 +57,7 @@ UC ReadEEPROMstatusRegSPI(UC spi_number)
 
 
 
-/*@fn comparedata
+/** @fn comparedata
  @brief Compare written value with read vaue from eeprom.
  @details Compare the original data with the received data from device.
  @warning 
@@ -80,7 +80,7 @@ UC comparedata(UC *bWrData, UC *bRdData, UI wDataLength) {
 	return status;
 }
 
-/*@fn ProgramBytePageSPI_EEPROM
+/** @fn ProgramBytePageSPI_EEPROM
  @brief Program the location of eeprom with a few bytes.
  @details Provide the address and data to be written to the eeprom.
  @warning 
@@ -124,7 +124,7 @@ void ProgramBytePageSPI_EEPROM(UC spi_number,UL wAddress, UC *pbData,UL wDatalen
 }
 
 
-/*@fn ReadDataBytesSPI_EEPROM
+/** @fn ReadDataBytesSPI_EEPROM
  @brief Read the location of eeprom.
  @details Provide the address and number of data to be read from eeprom.
  @warning 
@@ -159,7 +159,7 @@ void ReadDataBytesSPI_EEPROM(UC spi_number,UL wAddress, UC *pbData, UL wDataleng
 }
 
 
-/*@fn TestSPI_Few_Locations
+/** @fn TestSPI_Few_Locations
  @brief Write, read and compare eeprom locations.
  @details Write, read and compare eeprom locations.
  @warning 
@@ -200,7 +200,7 @@ void TestSPI_Few_Locations(UC spi_number)
 }
 
 
-/*@fn main
+/** @fn main
  @brief Program eeprom.
  @details Write, read and compare eeprom locations.
  @warning 
