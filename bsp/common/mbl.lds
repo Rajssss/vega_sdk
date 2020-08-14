@@ -23,7 +23,7 @@ SECTIONS
 {
 
    . = 0x30000; 
-   .EXT_INTR_isr_sect_0 : { *(.EXT_INTR_isr_sect_0) }
+   .INTERRUPT_isr_sect_0 : { *(.INTERRUPT_isr_sect_0) }
 
   /* text: test code section */
   . = 0x20000;/*SOC ROM start address*/

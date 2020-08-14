@@ -239,9 +239,9 @@ trap_entry:
   mret
 
   .align 2
-  .section .EXT_INTR_isr_sect_0,"ax",@progbits
-  .globl EXT_INTR_Handler_0
-EXT_INTR_Handler_0:
+  .section .INTERRUPT_isr_sect_0,"ax",@progbits
+  .globl INTERRUPT_Handler_0
+INTERRUPT_Handler_0:
   addi sp, sp, -272
 
   SREG x1, 1*REGBYTES(sp)
@@ -277,7 +277,7 @@ EXT_INTR_Handler_0:
   SREG x31, 31*REGBYTES(sp)
 
 
-  jal external_interrupt_handler
+  jal interrupt_handler
 
 
   LREG x1, 1*REGBYTES(sp)

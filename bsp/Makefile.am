@@ -13,7 +13,7 @@ libvega_a_SOURCES = \
 	./drivers/spi/spi.c \
 	./drivers/timer/timer.c \
 	./drivers/adc/adc.c \
-	./drivers/ext_interrupt/interrupt.c \
+	./drivers/interrupt/interrupt.c \
 	./common/stdlib.c \
 	./common/crt.S
 	

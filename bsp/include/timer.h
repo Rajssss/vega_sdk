@@ -42,7 +42,7 @@ UC timer_put_delay(UC timer_no, UI no_of_clocks);
 UI timer_get_current_value(UC timer_no);
  
  
- 
+void timer_run_in_intr_mode(UC timer_no, UI no_of_clocks);
 void timer_unmask_intr(UC timer_no); 	
 void timer_load(UC timer_no,UI count); 
 void timer0_intr_handler(void); 	

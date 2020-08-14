@@ -34,7 +34,7 @@ SDK_PATH=${VEGA_SDK}
 #+++++++++++++++++++++++
 # Executable name
 #+++++++++++++++++++++++
-EXECUTABLE_NAME=timer_sample
+EXECUTABLE_NAME=timer_intr
 
 
 include $(SDK_PATH)/bsp/common/config.mk

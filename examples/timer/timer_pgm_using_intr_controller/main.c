@@ -39,8 +39,8 @@
 void main ()
 {
 
-	//Initialise external interrupt controller
-	initialize_external_interrupt_table();
+	//Initialise interrupt controller
+	initialize_interrupt_table();
 
 	printf("\n\r TIMER TEST CASE - INTR Method");
 
@@ -48,9 +48,9 @@ void main ()
 	timer_run_in_intr_mode(TIMER_1,0x350);
 	timer_run_in_intr_mode(TIMER_2,0x500);
 
-	external_interrupt_enable(7); // For TIMER 0
-	external_interrupt_enable(8); // For TIMER 1
-	external_interrupt_enable(9); // For TIMER 2
+	interrupt_enable(7); // For TIMER 0
+	interrupt_enable(8); // For TIMER 1
+	interrupt_enable(9); // For TIMER 2
 	
 	while(1);
 	
