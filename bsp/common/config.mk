@@ -113,7 +113,8 @@ default: all
 
 upload: 
 ifeq ($(MACHINE),THEJAS32)
-	@echo "Please open a new terminal and type 'minicom thejas32' for XMODEM tarnsfer";
+	@echo "Please connect the arty35t board to PC and enter your password to open minicom";
+	sudo minicom thejas32
 else
 	@$(UTIL_PATH)/eth_transfer/send.sh $(PWD)/$(BIN)/$(EXECUTABLE_NAME).bin
 endif	
