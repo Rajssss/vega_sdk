@@ -52,7 +52,7 @@ Transfer the binary file to board.
 
 ## Documentation
 
-[Vega SDK Documentation ](https://cdac-vega.gitlab.io/sdkuserguide.html)
+[VEGA SDK Documentation ](https://cdac-vega.gitlab.io/sdkuserguide.html)
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)
