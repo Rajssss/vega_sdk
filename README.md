@@ -1,13 +1,15 @@
-# Vega SDK
+# VEGA SDK
 [![pipeline status](https://gitlab.com/cdac-vega/vega-sdk/badges/master/pipeline.svg)](https://gitlab.com/cdac-vega/vega-sdk/-/commits/master)
 
-The Vega SDK contains the following peripheral APIs, example programs for baremetal development.
+The VEGA SDK contains the following peripheral APIs, example programs for baremetal development.
 ### Peripheral APIs
 - UART
 - PLIC
 - SPI
 - GPIO
 - TIMER
+- ADC
+- PLIC
 
 ### Example programs
 - Hello world 
@@ -16,7 +18,7 @@ The Vega SDK contains the following peripheral APIs, example programs for bareme
 
 > For Ubuntu 18.04 (or newer) install below listed packages.
 
-- Vega-Tools [git clone https://gitlab.com/cdac-vega/vega-tools.git]
+- VEGA-Tools [git clone https://gitlab.com/cdac-vega/vega-tools.git]
 - build-essential
 - git
 
