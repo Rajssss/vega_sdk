@@ -29,7 +29,7 @@
 #include <include/encoding.h>
 
 
-extern INTERRUPT_Handler_0;
+extern int INTERRUPT_Handler_0;
 fp interrupt_table[64]; //Array of Function pointer.
 
 

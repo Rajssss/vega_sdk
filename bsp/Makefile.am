@@ -15,6 +15,7 @@ libvega_a_SOURCES = \
 	./drivers/adc/adc.c \
 	./drivers/interrupt/interrupt.c \
 	./common/stdlib.c \
+	./common/rawfloat.c \
 	./common/crt.S
 	
 nobase_include_HEADERS = \

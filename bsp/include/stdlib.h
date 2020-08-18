@@ -24,6 +24,7 @@ typedef unsigned short US;	//2 Bytes
 
 int printf(const char* fmt, ...);
 int putchar(int ch);
+int delay(unsigned int count);
 
 
 #endif /* INCLUDE_STDLIB_H_ */
