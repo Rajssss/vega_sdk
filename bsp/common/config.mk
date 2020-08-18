@@ -110,8 +110,13 @@ OBJECT_FILES_S   = $(patsubst %.S, $(BIN)/%.o,  $(wildcard *.S))
 
 default: all 
 
+
 upload: 
+ifeq ($(MACHINE),THEJAS32)
+	@echo "Please open a new terminal and type 'minicom thejas32' for XMODEM tarnsfer";
+else
 	@$(UTIL_PATH)/eth_transfer/send.sh $(PWD)/$(BIN)/$(EXECUTABLE_NAME).bin
+endif	
 
 all:   build_vega_lib $(PROGRAM_ELF) 
 
