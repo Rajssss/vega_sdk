@@ -17,6 +17,9 @@
 #ifndef INCLUDE_STDLIB_H_
 #define INCLUDE_STDLIB_H_
 
+#include <time.h>
+
+
 typedef unsigned char  UC;	//1 Byte
 typedef unsigned int   UI;	//4 Bytes
 typedef unsigned long  UL;	//4 Bytes
@@ -25,6 +28,8 @@ typedef unsigned short US;	//2 Bytes
 int printf(const char* fmt, ...);
 int putchar(int ch);
 int delay(unsigned int count);
+int udelay(unsigned int count);
+clock_t get_time();
 
 
 #endif /* INCLUDE_STDLIB_H_ */

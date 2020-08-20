@@ -16,8 +16,10 @@
 #include <stddef.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <time.h>
 
 #include <include/debug_uart.h>
+#include <include/encoding.h>
 
 #define HAS_FLOAT 1
 
@@ -239,10 +241,36 @@ static int skip_atoi(const char **s)
 }
 
 
-int delay(unsigned int count)
+int udelay(unsigned int count)
 {
-	for(int i=0;i<(count*4444);i++); //delay millisecond calculation with board mhz
+	for(int i=0;i<(count*35);i++); //delay millisecond calculation with board mhz
 }
+/*
+int udelay(unsigned int count)
+{
+	clock_t clock_count,target_count;	
+
+	clock_count = rdcycle(); //delay millisecond calculation with board mhz
+
+	target_count = clock_count + (count*35);
+
+	while(clock_count < target_count) 
+	{
+		clock_count = rdcycle();
+	}
+
+}*/
+
+clock_t get_time()
+{
+	clock_t clock_count;	
+
+	clock_count = read_csr(mcycle); 
+	
+	return clock_count;
+}
+
+
 
 static char *number(char *str, long num, int base, int size, int precision, int type)
 {

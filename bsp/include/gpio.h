@@ -60,11 +60,18 @@
 #define ON_LED			1
 #define OFF_LED			0
 
+#define ON			1
+#define OFF			0
+
+#define HIGH			1
+#define LOW			0
+
 /*  Function declarations
 *
 ***************************************************/
 
 US GPIO_read_pin(US pin_no);
 void GPIO_write_pin(US pin_no,US data);
+UL pulse_duration(US pin_number, US val);
 
 #endif /* GPIO_H_ */

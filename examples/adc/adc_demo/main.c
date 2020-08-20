@@ -45,7 +45,7 @@ void main (void)
 		adc_data = adc_analogRead(A0);
 		result_volt = (adc_data * volt_per_division);
 		printf ("\r A0 data: %0.2f V", result_volt);
-		delay(50);
+		udelay(6000);
 	}
 }
 

@@ -144,3 +144,18 @@ void GPIO_write_pin(US pin_no,US data) {
 }
 
 
+UL pulse_duration(US pin_number, US val)
+{
+	clock_t start_time=0, end_time=0;
+	UL total_time=0;
+	while(GPIO_read_pin(pin_number)!=val);
+	start_time =  get_time();
+	while(GPIO_read_pin(pin_number)==val);
+	end_time =  get_time();	
+
+	total_time = (end_time - start_time)*0.025;
+	return total_time;
+}
+
+
+

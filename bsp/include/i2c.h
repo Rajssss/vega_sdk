@@ -40,6 +40,12 @@ typedef struct {
 	UC I2C_TXCLR;
 } I2C_REG_TYPE;
 
+
+#define I2C_0 0
+#define I2C_1 1
+
+
+
 //Register address mapping
 #define I2CReg(i) (*((volatile I2C_REG_TYPE *)(I2C_BASE_ADDR+ (0x100 * i))))
 
@@ -61,6 +67,12 @@ void i2c_WriteByte_EEPROM(UC i2c_number,UC WBdata, US Word_Address, UC Slave_Add
 UC i2c_ReadByte_EEPROM(UC i2c_number,UC Slave_Address_Wr,UC Slave_Address_Rd, US Word_Address);
 void i2c_WriteMultiByte_EEPROM(UC i2c_num, UC *WBdata, US Word_Address,UC Slave_Address_Wr, UC write_data_length);
 void i2c_ReadMultiByte_EEPROM(UC i2c_num, UC *rxd_data, UC Slave_Address_Wr,UC Slave_Address_Rd, US Word_Address, UC read_data_length);
+
+void i2c_WriteByte_SSD1306(UC i2c_number,UC WBdata, US Word_Address, UC Slave_Address_Wr);
+UC i2c_ReadByte_SSD1306(UC i2c_number,UC Slave_Address_Wr,UC Slave_Address_Rd, US Word_Address);
+void i2c_WriteMultiByte_SSD1306(UC i2c_num, UC *WBdata, US Word_Address,UC Slave_Address_Wr, UC write_data_length);
+void i2c_ReadMultiByte_SSD1306(UC i2c_num, UC *rxd_data, UC Slave_Address_Wr,UC Slave_Address_Rd, US Word_Address, UC read_data_length);
+
 
 
 #endif /*__I2C_H*/

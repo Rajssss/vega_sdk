@@ -85,8 +85,8 @@ UC i2c_start(UC i2c_number, UC read_length, UC Read) {
 		I2CReg(i2c_number).I2C_CR = 0x01; //Set Start bit for write;
 
 	__asm__ __volatile__ ("fence");
-	printf("CR is %x",I2CReg(i2c_number).I2C_CR);
-	printf("\n\r");
+	//printf("CR is %x",I2CReg(i2c_number).I2C_CR);
+	//printf("\n\r");
 	while ((I2CReg(i2c_number).I2C_SR0 & 0x01) != 0x01)
 		; //check start sequence initiated
 	return 0;
@@ -137,7 +137,7 @@ UC i2c_data_write(UC i2c_number, UC *write_data, UC write_length) {
 
 		while ((I2CReg(i2c_number).I2C_SR0 & 0x02) != 0x02)
 			; //wait for stop bit to be set
-		printf("NACK rxd and stop bit set\n\r");
+		//printf("NACK rxd and stop bit set\n\r");
 		return 1;
 	} else
 		return 0;
