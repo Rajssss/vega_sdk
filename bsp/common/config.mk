@@ -124,9 +124,17 @@ all:   build_vega_lib $(PROGRAM_ELF)
 clean:
 	rm -f $(BIN)/*
 	@rm -f $(SDK_PATH)/bin/$(EXECUTABLE_NAME).bin
-	@cd $(SDK_PATH)/bsp/ && ./clean.sh	
+
+distclean:
+	rm -r -f $(BIN)	
+	@rm -f $(SDK_PATH)/bin/$(EXECUTABLE_NAME).bin
+	@cd $(SDK_PATH)/bsp/ && ./clean.sh
+
 mrproper:
 	rm -r -f $(BIN)	
+	@rm -f $(SDK_PATH)/bin/$(EXECUTABLE_NAME).bin
+	@cd $(SDK_PATH)/bsp/ && ./clean.sh
+
 .PHONY: build clean
 
 $(PROGRAM_ELF): $(OBJECT_FILES_C) $(OBJECT_FILES_S) 

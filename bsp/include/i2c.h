@@ -41,8 +41,13 @@ typedef struct {
 } I2C_REG_TYPE;
 
 
-#define I2C_0 0
-#define I2C_1 1
+#define I2C_0 	0
+#define I2C_1	1
+
+
+#define I2C_READ 	1
+#define I2C_WRITE 	0
+
 
 
 
