@@ -44,6 +44,11 @@ typedef struct
 	UI UART_LSR;
 }UART_REG_TYPE;
 
+
+#define UART_0		0
+#define UART_1		1
+#define UART_2		2
+
 #define UART_NO_ERROR 0
 #define UART_PARITY_ERROR -1
 #define UART_OVERRUN_ERROR -2
