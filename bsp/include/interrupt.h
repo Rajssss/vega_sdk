@@ -54,9 +54,8 @@ typedef struct interrupt_reg
 ***************************************************/
 void enable_irq(void);
 void interrupt_enable(UC intr_number);
-void initialize_interrupt_table(void);
+void irq_register_handler(UC irq_no, void (*irq_handler)());
 void interrupt_handler(void);
-
 #endif	/* _INTERRUPT_H */	
 
 

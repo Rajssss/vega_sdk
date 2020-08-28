@@ -99,53 +99,34 @@ void timer_run_in_intr_mode(UC timer_no, UI no_of_clocks) {
 }
 
 
-/** @fn timer0_intr_handler
-  @brief  timer 0 intr handler.
-  @details The function will execute the steps as described in routine
+/** @fn timer_register_isr
+  @brief  Enable timer interrupt in unmasked & user defined mode..
+  @details The selected timer's interrupt is enabled.
   @warning 
-  @param[in] unsigned char, unsigned int
+  @param[in] unsigned char timer_no: Selected timer.
   @param[Out] No output parameter.
 */
-void timer0_intr_handler(void) {
-	UI wEOI;
-	wEOI = Timer(0).EOI;			// Reads the Timer 0 EOI register to clear the intr.
-	// User can add their code for TImer 0 interrupt.
-	printf("\n\r TIMER 0 EXT intr occurred");
-	return;   
+void timer_register_isr(UC timer_no, void (*timer_isr)()){ ///*timer_isr is function pointer to user defined intr handler
+
+    UC irq_no;
+#if __riscv_xlen == 64
+	if(timer_no == 0)
+		irq_no = 10;
+	else if(timer_no == 1)
+		irq_no = 11;
+	else if(timer_no == 2)
+		irq_no = 12;
+
+#else
+	if(timer_no == 0)
+		irq_no = 7;
+	else if(timer_no == 1)
+		irq_no = 8;
+	else if(timer_no == 2)
+		irq_no = 9;
+#endif
+     	interrupt_enable(irq_no);		//Enable interrupt in controller.
+    	irq_register_handler(irq_no, timer_isr); 
 }
-
-
-/** @fn timer1_intr_handler
-  @brief  timer 1 intr handler.
-  @details The function will execute the steps as described in routine
-  @warning 
-  @param[in] unsigned char, unsigned int
-  @param[Out] No output parameter.
-*/
-void timer1_intr_handler(void) {
-	UI wEOI;
-	wEOI = Timer(1).EOI;			// Reads the Timer 1 EOI register to clear the intr.
-	// User can add their code for TImer 1 interrupt.
-	printf("\n\r TIMER 1 EXT intr occurred");
-	return;   
-}
-
-
-/** @fn timer2_intr_handler
-  @brief  timer 2 intr handler.
-  @details The function will execute the steps as described in routine
-  @warning 
-  @param[in] unsigned char, unsigned int
-  @param[Out] No output parameter.
-*/
-void timer2_intr_handler(void) {
-	UI wEOI;
-	wEOI = Timer(2).EOI;			// Reads the Timer 2 EOI register to clear the intr.
-	// User can add their code for TImer 2 interrupt.
-	printf("\n\r TIMER 2 EXT intr occurred");
-	return;   
-}
-
-
 
 
