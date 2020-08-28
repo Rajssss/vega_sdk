@@ -29,8 +29,8 @@
 #include <include/encoding.h>
 
 
-extern int INTERRUPT_Handler_0;
-fp interrupt_table[64]; //Array of Function pointer.
+extern volatile UL INTERRUPT_Handler_0;
+fp irq_table[64]; //Array of Function pointer.
 
 
 /** @fn    enable_irq
@@ -43,6 +43,13 @@ fp interrupt_table[64]; //Array of Function pointer.
 void enable_irq(void) {
     set_csr(mie, MIP_MEIP);			// Set MEIE bit in MIE register for Machine External Intr.
     set_csr(mstatus, MSTATUS_MIE);		// Set global machine intr bit (3rd bit) in MSTATUS register.
+#if __riscv_xlen == 64
+	//For 64 Bit processors		
+    write_csr(mtvec,(UL)&INTERRUPT_Handler_0);		// Set MTVEC register with vector address.
+#else
+	//For32 Bit processors
+    write_csr(mtvec,(UI)&INTERRUPT_Handler_0);		// Set MTVEC register with vector address.
+#endif
 }
 
 /** @fn interrupt_enable
@@ -55,39 +62,24 @@ void enable_irq(void) {
 
 void interrupt_enable(UC intr_number)
 {
-	intr_regs.INTR_EN |= (1 << intr_number);	// Enable interrupt for peripheral in interrupt controller.
+	enable_irq();	// Enable global interrupt and external interrupt of the processor.
+	intr_regs.INTR_EN |= ((UL)1 << intr_number);	// Enable interrupt for peripheral in interrupt controller.
 	__asm__ __volatile__ ("fence");
 }
 
  
-/** @fn initialize_interrupt_table
- @brief  Write to MTVEC reg and initialize interrupt controller table for both 32 bit & 64 bit processors.
- @details Fill interrupt table with the address of peripheral interrupt handlers.
+/** @fn irq_register_handler
+ @brief  Initialise peripheral interrupt handler to a table.
+ @details Enable processor interrupt and Global interrupt in machine mode  and init irq_table.
  @warning 
- @param[in]  No input parameter.
+ @param[in] No input parameter.
  @param[Out] No output parameter.
 */
-
-void initialize_interrupt_table(void)
-{
-	enable_irq();	// Enable global interrupt and external interrupt of the processor.
-
-#if __riscv_xlen == 64
-	//For 64 Bit processors			
-	write_csr(mtvec,(UL)&INTERRUPT_Handler_0);		// Set MTVEC register with vector address.
-	interrupt_table[10] = timer0_intr_handler; 	// Timer0 interrupt numer is 10 for 64 bit processor.
-	interrupt_table[11] = timer1_intr_handler; 	// Timer1 interrupt numer is 11 for 64 bit processor.
-	interrupt_table[12] = timer2_intr_handler;	// Timer2 interrupt numer is 12 for 64 bit processor.
-#else
-	//For32 Bit processors
-	write_csr(mtvec,(UI)&INTERRUPT_Handler_0);		// Set MTVEC register with vector address.
-	interrupt_table[7] = timer0_intr_handler; 	// Timer0 interrupt numer is 7 for 64 bit processor.
-	interrupt_table[8] = timer1_intr_handler; 	// Timer1 interrupt numer is 8 for 64 bit processor.
-	interrupt_table[9] = timer2_intr_handler;	// Timer2 interrupt numer is 9 for 64 bit processor.
-#endif
+void irq_register_handler(UC irq_no, void (*irq_handler)()){///*irq_handler is function pointer to user defined intr handler
+    	irq_table[irq_no] = irq_handler;
 }
 
- 
+
 /** @fn interrupt_handler
  @brief  Invoke the peripheral interrupt handler.
  @details The interrupt controller's status register is read to identify the interrupted peripheral and then the corresponding
@@ -96,17 +88,15 @@ void initialize_interrupt_table(void)
  @param[in] No input parameter.
  @param[Out] No output parameter.
 */
+
 void interrupt_handler(void){
 
-	UI intr_status = intr_regs.INTR_STATUS; 		// Read interrupt status register.
+	UL intr_status = intr_regs.INTR_STATUS; 		// Read interrupt status register.
 
-	for(int i = 0; i < 32; i++) 
+	for(int i = 0; i < 64; i++) 
 	{
 		if ((intr_status >> i) & 1)
-			interrupt_table[i]();		// Invoke the peripheral handler as function pointer.
+			irq_table[i]();		// Invoke the peripheral handler as function pointer.
 	}
 }
-
-
-
 

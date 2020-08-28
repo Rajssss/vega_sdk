@@ -48,6 +48,7 @@ void timer_load(UC timer_no,UI count);
 void timer0_intr_handler(void); 	
 void timer1_intr_handler(void);
 void timer2_intr_handler(void);
+void timer_register_isr(UC timer_no, void (*timer_isr)());
 
 
 #endif /* TIMER_H_ */

@@ -277,7 +277,7 @@ void SPI_transmit(UC spi_number,US bData) {
  @param[in] No input parameter.
  @param[Out] No output parameter. 
 */
-void SPI_0_intr_handler(void) {
+/*void SPI_0_intr_handler(void) {
 	UC status = 0;
 
 	status = SPIreg(0).Status;	//Read SPI 0 status register.
@@ -289,7 +289,7 @@ void SPI_0_intr_handler(void) {
 	{
 		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
 	}   
-}
+}*/
 
 
 /** @fn SPI_1_intr_handler
@@ -299,7 +299,7 @@ void SPI_0_intr_handler(void) {
  @param[in] unsigned char spi_number: Denotes the selected SPI.
  @param[Out] No output parameter. 
 */
-void SPI_1_intr_handler(void) {
+/*void SPI_1_intr_handler(void) {
 	UC status = 0;
 
 	status = SPIreg(1).Status;	//Read SPI 1 status register.
@@ -311,7 +311,7 @@ void SPI_1_intr_handler(void) {
 	{
 		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
 	}   
-}
+}*/
 
 
 /** @fn SPI_2_intr_handler
@@ -321,7 +321,7 @@ void SPI_1_intr_handler(void) {
  @param[in] unsigned char spi_number: Denotes the selected SPI.
  @param[Out] No output parameter. 
 */
-void SPI_2_intr_handler(void) {
+/*void SPI_2_intr_handler(void) {
 	UC status = 0;
 
 	status = SPIreg(2).Status; //Read SPI 2 status register.
@@ -333,7 +333,7 @@ void SPI_2_intr_handler(void) {
 	{
 		//spi_handle_tx_intr(); // Funcion pointer for tx intr.
 	}   
-}
+}*/
 
 /** @fn SPI_wait_if_busy
  @brief  Checks if SPI controller is busy.
@@ -401,4 +401,71 @@ void SPI_write_tx_reg(UC spi_number,US bData) {
 	__asm__ __volatile__ ("fence");
 	return;
 }
+
+
+
+/** @fn spi_register_isr
+ @brief  
+ @details 
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI,
+            unsigned short bData: The data to be written to tx data register.
+ @param[Out] No output parameter. 
+*/
+void spi_register_isr(UC spi_number,void (*spi_isr)())
+{ 
+    	UC irq_no;
+#if __riscv_xlen == 64
+	if(spi_number == 0)
+		irq_no = 6;
+	else if(spi_number == 1)
+		irq_no = 7;
+	else if(spi_number == 2)
+		irq_no = 52;
+	else if(spi_number == 3)
+		irq_no = 53;
+#else
+	if(spi_number == 0)
+		irq_no = 3;
+	else if(spi_number == 1)
+		irq_no = 4;
+	else if(spi_number == 2)
+		irq_no = 23;
+#endif
+	interrupt_enable(irq_no);		//Enable interrupt in controller.
+    	irq_register_handler(irq_no, spi_isr);  
+}
+
+
+/** @fn spi_intr_status
+ @brief  Read SPI interrupt status.
+ @details Reads SPI controllers status register to distinguish which type of interrupt has occurred.
+ @warning 
+ @param[in] unsigned char spi_number: Denotes the selected SPI.
+ @param[Out] Interrupt status. 
+*/
+UC spi_intr_status(UC spi_number) 
+{
+	UC status = 0;
+	if(spi_number == 0)
+		status = SPIreg(0).Status;	//Read SPI 0 status register.
+	if(spi_number == 1)
+		status = SPIreg(1).Status;	//Read SPI 1 status register.
+	if(spi_number == 2)
+		status = SPIreg(2).Status;	//Read SPI 2 status register.
+	if(spi_number == 3)
+		status = SPIreg(3).Status;	//Read SPI 3 status register.
+	
+    	//read intr ststus reg and return SPI_RX_INTR or SPI_TX_INTR(define these as macros)
+
+	if(status & (1 << 2)) // SPI receive complete interrupt occurred.
+	{
+		return SPI_RX_INTR;
+	}
+	else if(status & (1 << 3))  // SPI TX register empty interrupt occurred.
+	{
+		return SPI_TX_INTR;
+	}   
+}
+
 
