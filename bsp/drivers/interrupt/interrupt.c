@@ -63,7 +63,7 @@ void enable_irq(void) {
 void interrupt_enable(UC intr_number)
 {
 	enable_irq();	// Enable global interrupt and external interrupt of the processor.
-	intr_regs.INTR_EN |= (1 << intr_number);	// Enable interrupt for peripheral in interrupt controller.
+	intr_regs.INTR_EN |= ((UL)1 << intr_number);	// Enable interrupt for peripheral in interrupt controller.
 	__asm__ __volatile__ ("fence");
 }
 

@@ -51,7 +51,7 @@ void main ()
 		{					
 			GPIO_write_pin(0,LOW);
 			GPIO_write_pin(0,HIGH);				
-			delay(1);
+			udelay(1);
 			GPIO_write_pin(0,LOW);	
 			total_time = pulse_duration(1,HIGH);				
 			distance = microsecondsToCentimeters(total_time);
