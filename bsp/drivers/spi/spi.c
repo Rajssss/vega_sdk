@@ -25,6 +25,8 @@
 #include <include/stdlib.h>
 #include <include/spi.h>
 #include <include/config.h>
+#include <include/interrupt.h>
+
 
 SPIcntrlRegType gSPItransfer;
 

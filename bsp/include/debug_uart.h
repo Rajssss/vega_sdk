@@ -16,8 +16,8 @@
 #ifndef DEBUG_UART_H_
 #define DEBUG_UART_H_
 
-#include <include/config.h>
-#include <include/stdlib.h>
+#include "config.h"
+#include "stdlib.h"
 /**
  *  Definition section
 ***************************************************/
