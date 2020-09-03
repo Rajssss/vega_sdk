@@ -16,7 +16,7 @@
 
 
 #include "stdlib.h"	//for datatypes
-#include "config.h"	//for datatypes
+#include "config.h"	//for base address
 
 
 

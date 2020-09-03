@@ -7,10 +7,9 @@
 *
 ***************************************************/
 
-#include "stdlib.h"
+#include "stdlib.h"	//for datatypes
+#include "config.h"	//for base address
 
-
-#define PWMC_BASE_ADDR 	0x10400000
 
 
 #define PWM_CH_0			0
@@ -94,20 +93,24 @@ typedef union
 void PWMC_Set_Period(UC channel_no, UI period);
 void PWMC_Set_OnOffTime(UC channel_no, UI time);
 void PWMC_init(UC channel_no,UC mode,UC align,UC intr_en_dis,UC opc, US repeatCount);
-void PWMC_Configure(UC channel_no, UI cword);
+void PWMC_Set_mode(UC channel_no,UC mode);
+void PWMC_Set_alignment(UC channel_no,UC align);
+void PWMC_Set_RepeatCount(UC channel_no,US repeatCount);
+void PWMC_Change_mode(void);
 void PWMC_Enable(void);
 void PWMC_Enable_with_intr(void);
 void PWMC_Disable(void);
-void pwmc_all_channel_idle_mode(UC opc);
-void pwmc_all_channel_continuous_mode(UC opc);
-void pwmc_all_channel_continuous_disable_mode(UC opc);
-void pwmc_one_short_mode_left_aligned(UC opc);
-void pwmc_one_short_mode_right_aligned(UC opc);
-void pwmc_one_short_mode_left_align_custom_repeat(UC opc,US repeat_count);
-void pwmc_one_short_mode_right_align_custom_repeat(UC opc,US repeat_count);
-void pwmc_channel_one_short_mode_with_intr(UC opc,UC channel_no);
 void pwmc_register_isr(UC pwmc_ch_number,void (*pwmc_isr)());
 void pwmc_ch0_intr_handler(void);
+void pwmc_ch1_intr_handler(void);
+void pwmc_ch2_intr_handler(void);
+void pwmc_ch3_intr_handler(void);
+void pwmc_ch4_intr_handler(void);
+void pwmc_ch5_intr_handler(void);
+void pwmc_ch6_intr_handler(void);
+void pwmc_ch7_intr_handler(void);
+
+
 
 #endif	/* _PWMC_H */	
 
