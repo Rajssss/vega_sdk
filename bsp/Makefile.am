@@ -10,6 +10,7 @@ libvega_a_SOURCES = \
 	./drivers/gpio/gpio.c \
 	./drivers/gpio/led.c \
 	./drivers/i2c/i2c.c \
+	./drivers/qspi/qspi.c \
 	./drivers/spi/spi.c \
 	./drivers/timer/timer.c \
 	./drivers/adc/adc.c \
@@ -22,6 +23,7 @@ libvega_a_SOURCES = \
 nobase_include_HEADERS = \
 	./include/gpio.h \
 	./include/i2c.h \
+	./include/qspi.h \
 	./include/m25p80_eeprom.h \
 	./include/config.h \
 	./include/spi.h \
