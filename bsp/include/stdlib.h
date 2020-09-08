@@ -26,9 +26,11 @@ typedef unsigned long  UL;	//4 Bytes
 typedef unsigned short US;	//2 Bytes
 
 int printf(const char* fmt, ...);
+int sprintf(char * buffer,const char *fmt, ...);
 int putchar(int ch);
 int delay(unsigned int count);
 int udelay(unsigned int count);
+int atoi(char *s);
 clock_t get_time();
 
 

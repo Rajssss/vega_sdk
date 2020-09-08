@@ -30,6 +30,31 @@
 * 
 *
 ***************************************************/
+#if __riscv_xlen == 64
+#define UART_0_IRQ		1
+#define UART_1_IRQ		2
+#define UART_2_IRQ		3
+#define SPI_0_IRQ		6
+#define SPI_1_IRQ		7
+#define I2C_0_IRQ		8
+#define I2C_1_IRQ		9
+#define TIMER_0_IRQ		10
+#define TIMER_1_IRQ		11
+#define TIMER_2_IRQ		12
+#else
+#define UART_0_IRQ		0
+#define UART_1_IRQ		1
+#define UART_2_IRQ		2
+#define SPI_0_IRQ		3
+#define SPI_1_IRQ		4
+#define I2C_0_IRQ		5
+#define I2C_1_IRQ		6
+#define TIMER_0_IRQ		7
+#define TIMER_1_IRQ		8
+#define TIMER_2_IRQ		9
+#endif
+
+
 typedef void (*fp)(void); //Declares a type of a void function that accepts an void
 
 typedef struct interrupt_reg

@@ -240,6 +240,22 @@ static int skip_atoi(const char **s)
   return i;
 }
 
+int atoi(char* str) 
+{ 
+    // Initialize result 
+    int res = 0; 
+  
+    // Iterate through all characters 
+    // of input string and update result 
+    for (int i = 0; str[i] 
+                    != '\0'; 
+         ++i) 
+        res = res * 10 + str[i] - '0'; 
+  
+    // return result. 
+    return res; 
+} 
+
 
 int udelay(unsigned int count)
 {
@@ -803,6 +819,25 @@ int printf(const char *fmt, ...)
 	n++;
 	p++;
   }
+
+  return n;
+}
+
+int sprintf(char * buffer,const char *fmt, ...)
+{
+  char *p;
+  va_list args;
+  int n=0;
+
+  va_start(args, fmt);
+  ee_vsprintf(buffer, fmt, args);
+  va_end(args);
+  /*p=buffer;
+  while (*p) {
+    	putchar((int)*p);
+	n++;
+	p++;
+  }*/
 
   return n;
 }

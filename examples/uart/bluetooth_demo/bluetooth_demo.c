@@ -1,17 +1,17 @@
 /***************************************************
  Project Name		: MDP - Microprocessor Development Project
  Project Code		: HD083D
- Created		: 08-Nov-2019
- Filename		: uart_tx_rx.c
- Purpose		: UART interface
- Description		: transmission & reception with uart interface
- Author(s)		: Karthika P
- Email			: karthikap@cdac.in
+ Created		: 08-Jul-2020
+ Filename		: bluetooth_demo.c
+ Purpose		: Bluetooth Demo
+ Description		:  Bluetooth Demo with uart interface
+ Author(s)		: Premjith A V
+ Email			: premjith@cdac.in
 
  See LICENSE for license details.
  ***************************************************/
 /**
- @file uart_tx_rx.c.c
+ @file bluetooth_demo.c
  @brief Contains routines for UART interface
  @detail Includes software functions to initialize,
  configure, transmit and receive over UART

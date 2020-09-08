@@ -198,7 +198,7 @@ void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr) {
  * @param[in] unsigned char
  * @param[Out] Returns 1 if Tx intr occurs, 2 if Rx intr occurs.
 */
-int uart_intr_handler(UC uart_number) {
+/*int uart_intr_handler(UC uart_number) {
 	UC status = 0;
 
 	status = UartReg(uart_number).UART_IIR_FCR;
@@ -206,5 +206,5 @@ int uart_intr_handler(UC uart_number) {
 		return 1;
 	else if((status & 0x04)==0x04)
 		return 2;    // uart RX intr occurred.
-}
+}*/
 
