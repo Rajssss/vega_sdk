@@ -1,7 +1,7 @@
 /***************************************************************************
  * Project                               :  MDP
  * Name of the file                      :  adc.c
- * Brief Description of file             :  Driver to read the ADC valu.
+ * Brief Description of file             :  Driver to read the ADC value.
  * Name of Author                        :  Sreeju G R
  * Email ID                              :  sreeju@cdac.in
 

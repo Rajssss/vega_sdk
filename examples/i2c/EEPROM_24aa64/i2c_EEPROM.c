@@ -35,14 +35,14 @@
 void main() {
 
 	printf("I2C EEPROM-24aa64\n\r");
-	//i2c_configure(0, 25000000, 100000); //System clock =25MHz and I2C clock =100 kHz
+	i2c_configure(I2C_0, SYS_FREQ, I2C_FREQ); //System clock =25MHz and I2C clock =100 kHz
 	//i2c_initialize(0);
 
 	printf("I2C EEPROM Write started 1 byte \n\r");
 
-	i2c_WriteByte_EEPROM(0, 0x02, 0x0000, 0xA2);//control code 0A,chip select 0
+	i2c_WriteByte_EEPROM(I2C_0, 0x02, 0x0000, I2C_EEPROM_ADDR_WR);//control code 0A,chip select 0
 	printf("I2C EEPROM Read started 1 byte \n\r");
-	UC Byte_data = i2c_ReadByte_EEPROM(0, 0xA2, 0xA3, 0x0000);//control code 0A,chip select 0
+	UC Byte_data = i2c_ReadByte_EEPROM(I2C_0, I2C_EEPROM_ADDR_WR, I2C_EEPROM_ADDR_RD, 0x0000);//control code 0A,chip select 0
 
 	if (Byte_data == 0x02) {
 		printf("Rxd character is 0x02 \n\r");
@@ -66,9 +66,9 @@ void main() {
 		//printf("\n\r");
 	}
 	printf("I2C EEPROM Write started \n\r");
-	i2c_WriteMultiByte_EEPROM(0, data_arr, 0x0000, 0xA2, 16);
+	i2c_WriteMultiByte_EEPROM(I2C_0, data_arr, 0x0000, I2C_EEPROM_ADDR_WR, 16);
 	printf("I2C EEPROM Read started\n\r");
-	i2c_ReadMultiByte_EEPROM(0, rxd_data, 0xA2, 0xA3, 0x0000, 16);
+	i2c_ReadMultiByte_EEPROM(I2C_0, rxd_data, I2C_EEPROM_ADDR_WR, I2C_EEPROM_ADDR_RD, 0x0000, 16);
 	for (int i = 0; i < 16; i++)	//comparison
 		if (rxd_data[i] != data_arr[i]) {
 			printf("read unsuccessfull \n\r");
@@ -103,7 +103,7 @@ void i2c_WriteByte_EEPROM(UC i2c_num, UC WBdata, US Word_Address,
 	UC Word_addr_LSB = (UC) (Word_Address & 0xFF);
 
 	while (1) {
-		i2c_start(i2c_num, 0x00, 0);
+		i2c_start(i2c_num, 0x00, I2C_WRITE);
 
 		if (i2c_data_write(i2c_num, &Slave_Address_Wr, 01)) { //writes slave address and set EEPROM to write mode
 
@@ -150,7 +150,7 @@ UC i2c_ReadByte_EEPROM(UC i2c_num, UC Slave_Address_Wr, UC Slave_Address_Rd,
 	UC rxd_data;
 
 	while (1) {
-		i2c_start(i2c_num, 0x00, 0);
+		i2c_start(i2c_num, 0x00, I2C_WRITE);
 
 		if (i2c_data_write(i2c_num, &Slave_Address_Wr, 01)) { //writes slave address
 
@@ -169,7 +169,7 @@ UC i2c_ReadByte_EEPROM(UC i2c_num, UC Slave_Address_Wr, UC Slave_Address_Rd,
 		//printf("Word address  ACK\n\r");
 		i2c_stop(i2c_num);
 
-		i2c_start(i2c_num, 0x01, 1); //start sequence for reading data
+		i2c_start(i2c_num, 0x01, I2C_READ); //start sequence for reading data
 		if (i2c_data_write(i2c_num, &Slave_Address_Rd, 01)) { //write slave address and set EEPROM to read mode
 
 			continue; //received NACK

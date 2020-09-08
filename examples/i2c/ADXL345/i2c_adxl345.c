@@ -35,20 +35,20 @@
  */
 void main(){
 	printf("I2C ADXL345 Accelerometer\n\r");
-		i2c_configure(0, 40000000, 100000); //System clock =40MHz and I2C clock =100 kHz
+		i2c_configure(I2C_0, 40000000, 100000); //System clock =40MHz and I2C clock =100 kHz
 
-		i2c_ADXL345_write_register(0,ADXL345_I2C_ADDR_WR,ADXL345_REG_POWER_CTL,0x08);
-	UC status=i2c_ADXL345_read_register(0,ADXL345_I2C_ADDR_WR,ADXL345_I2C_ADDR_RD,ADXL345_REG_POWER_CTL);
-		i2c_ADXL345_set_range(0, ADXL345_I2C_ADDR_WR,ADXL345_RANGE_2_G,ADXL345_REG_DATA_FORMAT);
+		i2c_ADXL345_write_register(I2C_0,ADXL345_I2C_ADDR_WR,ADXL345_REG_POWER_CTL,0x08);
+	UC status=i2c_ADXL345_read_register(I2C_0,ADXL345_I2C_ADDR_WR,ADXL345_I2C_ADDR_RD,ADXL345_REG_POWER_CTL);
+		i2c_ADXL345_set_range(I2C_0, ADXL345_I2C_ADDR_WR,ADXL345_RANGE_2_G,ADXL345_REG_DATA_FORMAT);
 while(1){
 
-		US acc_x=(i2c_ADXL345_get_acc(0, ADXL345_I2C_ADDR_WR,
+		US acc_x=(i2c_ADXL345_get_acc(I2C_0, ADXL345_I2C_ADDR_WR,
 				ADXL345_I2C_ADDR_RD, ADXL345_REG_DATAX0));
 		printf("\n\r Acceleration in X axis %x",acc_x);
-		US acc_y=(i2c_ADXL345_get_acc(0, ADXL345_I2C_ADDR_WR,
+		US acc_y=(i2c_ADXL345_get_acc(I2C_0, ADXL345_I2C_ADDR_WR,
 						ADXL345_I2C_ADDR_RD, ADXL345_REG_DATAY0));
 		printf("\n\r Acceleration in Y axis %x",acc_y);
-		US acc_z=(i2c_ADXL345_get_acc(0, ADXL345_I2C_ADDR_WR,
+		US acc_z=(i2c_ADXL345_get_acc(I2C_0, ADXL345_I2C_ADDR_WR,
 							ADXL345_I2C_ADDR_RD, ADXL345_REG_DATAZ0));
 		printf("\n\r Acceleration in Z axis %x",acc_z);
 }

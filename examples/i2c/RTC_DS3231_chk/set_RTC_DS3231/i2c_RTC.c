@@ -36,7 +36,7 @@ RTC_TIME gRTCtime;
  */
 void main() {
 	//UC rxd_data[7];
-	printf("I2C ds3231 rtc\n\r");
+	printf("set I2C ds3231 rtc\n\r");
 	i2c_configure(I2C_0, SYS_FREQ, I2C_FREQ); //System clock =25MHz and I2C clock =100 kHz
 	//i2c_initialize(0);
 

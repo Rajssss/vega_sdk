@@ -26,10 +26,48 @@
  *
  *
  ***************************************************/
-#define MDP_SPI_0			0
-#define MDP_SPI_1			1
-#define MDP_SPI_2			2
-#define MDP_SPI_3			3
+#define QSPI_0			0
+#define QSPI_1			1
+#define QSPI_2			2
+#define QSPI_3			3
+
+
+#define PRESCALAR_MAX	00
+#define PRESCALAR_MIN	0xFF
+
+#define CK_MODE_0         		0
+#define CK_MODE_1         		1
+
+#define CHIP_HIGH_TIME 			0x05
+
+#define INSTR_LINE_1	0x01
+#define INSTR_LINE_2	0x02
+#define INSTR_LINE_3	0x03
+
+
+#define POLLING_INTERVAL_256	0x40
+#define AUTO_POLL_STOP_ON		0x01
+#define AUTO_POLL_STOP_OFF		0x00
+#define POLL_MODE_AND			0X00
+#define POLL_MODE_OR			0X01
+
+
+#define DATA_LINE_1		0x01
+#define DATA_LINE_2		0x02
+#define DATA_LINE_3		0x03
+
+#define DATA_SIZE_0		0x00
+#define DATA_SIZE_1		0x01
+#define DATA_SIZE_2		0x02
+#define DATA_SIZE_3		0x03
+
+
+#define INDIRECT_WR 	0x00
+#define INDIRECT_RD 	0x01
+#define AUTOPOLL_RD 	0X02
+
+
+
 
 #define SPI_INTR_MODE			1
 #define SPI_POLLING_MODE		2
@@ -95,6 +133,11 @@
 
 /*************Micron M25P80 Serial Flash************* 
  *************Embedded Memory Command Set************/
+#define RD_STATUS1_REG_QSPI_CMD 	0x05
+#define RD_FLASH_ID_CMD 			0x9F
+#define RESET_ENABLE_CMD			0x66
+#define RESET_FLASH_CMD				0x99
+
 /*#define WR_DISABLE_LATCH_SPI_CMD			0x04
  #define WR_EN_LATCH_SPI_CMD     			0x06
  #define BYTE_PAGE_PGM_SPI_CMD  				0x02
@@ -102,6 +145,10 @@
  #define RD_STATUS_REG_SPI_CMD				0x05
  #define RDID_SPI_CMD					0x83
  /***************************************************/
+
+
+
+#define FLASH_MEMORY_SIZE	0X19
 typedef unsigned char UC; //1 Byte
 typedef unsigned short US; //2 Bytes
 typedef unsigned int UI; //4 Bytes
@@ -155,20 +202,31 @@ typedef union {
  *
  ***************************************************/
 
-void SPI_init(UC spi_number);
-void SPI_config(UC spi_number, US cword);
-void SPI_set_baud(UC spi_number, UC bBaudCFD);
-UI SPI_get_slave_select(UC spi_number);
-void SPI_set_slave_select(UC spi_number, UI slave_sel_val);
-UC SPI_check_overrun(UC spi_number);
-void SPI_enable_intr(UC spi_number, UC tx_intr, UC rx_intr);
-US SPI_receive(UC spi_number);
-void SPI_transmit(UC spi_number, US bData);
-void SPI_intr_handler(UC spi_number);
-void SPI_wait_if_busy(UC spi_number);
-void SPI_set_CSAAT_pin(UC spi_number, UC status);
-US SPI_read_rx_reg(UC spi_number);
-void SPI_write_tx_reg(UC spi_number, US bData);
+void Qspi_initialise(UC qspi_number);
+void Qspi_read_flash_register(UC qspi_number, UL address, UI dataLength,
+		UC command, UC instr_line, UC data_line, UC *read_data);
+
+void Qspi_instrTxt(UC qspi_number, UC instr_line, UC command);
+
+void Qspi_write_flash_register(UC qspi_number, UL address, UI dataLength,
+		UC command, UC instr_line, UC data_line, UC wr_data);
+
+void Qspi_mem_write(UC qspi_number, UL Address, UI DataLength, UC command,
+		UC instr_line, UC data_line, UC data_size, UC address_line,
+		UC address_size, UC fifo_threshold, UC *write_data);
+
+void Qspi_mem_read(UC qspi_number, UL Address, UI DataLength, UC command,
+		UC instr_line, UC data_line, UC data_size, UC address_line,
+		UC address_size, UC fifo_threshold, UC *read_data);
+
+UC QSPI_wait_if_busy(UC qspi_number);
+
+
+
+void FlashReadId(UC qspi_number);
+void Board_setup(UC qspi_number);
+void qspi_delay(UL count);
+
 
 //void (*spi_handle_rx_intr)(void);  
 //void (*spi_handle_tx_intr)(void);

@@ -10,10 +10,12 @@ libvega_a_SOURCES = \
 	./drivers/gpio/gpio.c \
 	./drivers/gpio/led.c \
 	./drivers/i2c/i2c.c \
+	./drivers/qspi/qspi.c \
 	./drivers/spi/spi.c \
 	./drivers/timer/timer.c \
 	./drivers/adc/adc.c \
 	./drivers/interrupt/interrupt.c \
+	./drivers/pwm/pwmc.c \
 	./common/stdlib.c \
 	./common/rawfloat.c \
 	./common/crt.S
@@ -21,6 +23,7 @@ libvega_a_SOURCES = \
 nobase_include_HEADERS = \
 	./include/gpio.h \
 	./include/i2c.h \
+	./include/qspi.h \
 	./include/m25p80_eeprom.h \
 	./include/config.h \
 	./include/spi.h \
@@ -30,6 +33,7 @@ nobase_include_HEADERS = \
 	./include/adc.h \
 	./include/interrupt.h \
 	./include/led.h \
+	./include/pwmc.h \
 	./include/encoding.h \
 	./include/stdlib.h
 
