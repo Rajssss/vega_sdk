@@ -332,8 +332,15 @@ void modem_host_mode() {
  */
 void main() {
 	led_status = 0;
+
+	printf("\n\r *****************************************************************************");
+	printf("\n\r INFO: Connect ESP8266 module to UART 1 ");	
+	printf("\n\r INFO: Please try to connect the WIFI access point 'ESP-XXXXXX'");	
+	printf("\n\r INFO: Switch off the mobile data and try accessing the web page '192.168.4.1'");	
+	printf("\n\r *****************************************************************************");
+
 	GPIO_write_pin(22, OFF_LED);
-	printf("Setting up Wifi Modem \n");
+	printf("\n\r Setting up Wifi Modem \n");
 	uart_set_baud_rate(UART_1, 115200, 40000000);
 	at_check();
 	modem_host_mode();
@@ -343,6 +350,7 @@ void main() {
 	modem_ipaddress();
 	udelay(1000);
 	modem_create_server();
+	printf("\n\rServer running..\n");
 	http_connect();
 
 }

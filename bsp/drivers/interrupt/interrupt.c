@@ -28,6 +28,16 @@
 #include <include/config.h>
 #include <include/encoding.h>
 
+#if __riscv_xlen == 64
+#define MAXIMUM_INTR_COUNT 64
+#else
+#define MAXIMUM_INTR_COUNT 32
+#endif
+
+#define read_const_csr(reg) ({ unsigned long __tmp; \
+  asm ("csrr %0, " #reg : "=r"(__tmp)); \
+  __tmp; })
+
 
 extern volatile UL INTERRUPT_Handler_0;
 fp irq_table[64]; //Array of Function pointer.
@@ -89,14 +99,32 @@ void irq_register_handler(UC irq_no, void (*irq_handler)()){///*irq_handler is f
  @param[Out] No output parameter.
 */
 
-void interrupt_handler(void){
+void interrupt_handler(uintptr_t cause, uintptr_t epc, uintptr_t regs[32]){
 
 	UL intr_status = intr_regs.INTR_STATUS; 		// Read interrupt status register.
 
-	for(int i = 0; i < 64; i++) 
+	printf("%x\n",intr_status);
+	
+	/*
+
+	printf("\n\rTRAP\n\r");
+	printf("EPC : %lx\n\r",epc);
+	printf("Cause : %lx\n\r",cause);
+	printf("badaddress: %lx\n\r",read_const_csr(mbadaddr));
+	for(int i=0;i<32;i++)
+		printf("reg %d : %lx\n\r",i,regs[i]);*/
+
+	
+
+	for(UL i = 0; i < MAXIMUM_INTR_COUNT ; i++) 
 	{
-		if ((intr_status >> i) & 1)
+		if ((intr_status >> i) & (UL)1){
+			//printf("\nINTR if %d",i);
 			irq_table[i]();		// Invoke the peripheral handler as function pointer.
+			//printf("\nINTR if done");
+		}
+
 	}
+	//printf("\nINTR handler return");
 }
 

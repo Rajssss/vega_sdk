@@ -147,7 +147,7 @@ _start:
   li a1, 1
 1:bgeu a0, a1, 1b
 
-  # give each core 32KB of stack + TLS
+  # give each core 16KB of stack + TLS
 #define STKSHIFT 14
   sll a2, a0, STKSHIFT
   add tp, tp, a2
@@ -239,7 +239,7 @@ trap_entry:
   mret
 
   .align 2
-  .section .INTERRUPT_isr_sect_0,"ax",@progbits
+  /*.section .INTERRUPT_isr_sect_0,"ax",@progbits*/
   .globl INTERRUPT_Handler_0
 INTERRUPT_Handler_0:
   addi sp, sp, -272
@@ -276,9 +276,14 @@ INTERRUPT_Handler_0:
   SREG x30, 30*REGBYTES(sp)
   SREG x31, 31*REGBYTES(sp)
 
-
+  /*csrr a0, mcause
+  csrr a1, mepc
+  mv a2, sp*/
   jal interrupt_handler
-
+ 
+  /*# Remain in M-mode after eret
+  li t0, MSTATUS_MPP
+  csrs mstatus, t0*/
 
   LREG x1, 1*REGBYTES(sp)
   LREG x2, 2*REGBYTES(sp)

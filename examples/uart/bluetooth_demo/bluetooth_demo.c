@@ -68,7 +68,13 @@ void main() {
 	char error;       
 	char str[100]={0,};
 
-	printf("Setting up Bluetooth Device \n\r");
+	printf("\n\r *****************************************************************************");
+	printf("\n\r INFO: Connect HC-05 Bluetooth module to UART 1 ");	
+	printf("\n\r INFO: Please try to connect the Bluetooth device 'HC-05'");	
+	printf("\n\r INFO: Press the 'SCAN' button in VEGA bluetooth App from your Android phone");	
+	printf("\n\r *****************************************************************************");
+
+	printf("\n\r Setting up Bluetooth Device \n\r");
 	uart_set_baud_rate(UART_1,9600,40000000);
 
 while(1){

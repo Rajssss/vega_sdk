@@ -21,6 +21,9 @@ Demo for ssd1306 i2c driver for  VEGA Processor
 #include "stdlib.h"
 
 void main() {
+		printf("\n\r *****************************************************************************");
+		printf("\n\r INFO: Connect SSD1306 OLED module to I2C0 ");			
+		printf("\n\r *****************************************************************************");
 
 		ssd1306_begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
 

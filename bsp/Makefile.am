@@ -1,5 +1,10 @@
 lib_LIBRARIES = libvega.a
 
+if DEBUG
+AM_CFLAGS = -g3 -O0
+AM_CXXFLAGS = -g3 -O0
+endif
+
 #libvega_a_CFLAGS = @VEGA_FLAGS@ 
 #libvega_a_CCASFLAGS = @VEGA_FLAGS@ 
 

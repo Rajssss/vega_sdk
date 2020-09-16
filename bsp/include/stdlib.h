@@ -31,7 +31,8 @@ int putchar(int ch);
 int delay(unsigned int count);
 int udelay(unsigned int count);
 int atoi(char *s);
+float atof(char* s);
 clock_t get_time();
-
+void *_sbrk(int incr);
 
 #endif /* INCLUDE_STDLIB_H_ */

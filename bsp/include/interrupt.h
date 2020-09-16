@@ -24,7 +24,7 @@
 
 #include "config.h"
 #include "stdlib.h"
-
+#include "encoding.h"
 
 /*  Define section
 * 
@@ -80,7 +80,8 @@ typedef struct interrupt_reg
 void enable_irq(void);
 void interrupt_enable(UC intr_number);
 void irq_register_handler(UC irq_no, void (*irq_handler)());
-void interrupt_handler(void);
+//void interrupt_handler(void);
+void interrupt_handler(uintptr_t cause, uintptr_t epc, uintptr_t regs[32]);
 #endif	/* _INTERRUPT_H */	
 
 
