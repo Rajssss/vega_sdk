@@ -41,7 +41,7 @@
 #define CHIP_HIGH_TIME 			0x05
 
 #define INSTR_LINE_1	0x01
-#define INSTR_LINE_2	0x02
+
 #define INSTR_LINE_3	0x03
 
 
@@ -53,13 +53,22 @@
 
 
 #define DATA_LINE_1		0x01
-#define DATA_LINE_2		0x02
+
 #define DATA_LINE_3		0x03
+
+#define ADDR_LINE_1		0x01
+
+#define ADDR_LINE_3		0x03
 
 #define DATA_SIZE_0		0x00
 #define DATA_SIZE_1		0x01
 #define DATA_SIZE_2		0x02
 #define DATA_SIZE_3		0x03
+
+#define ADDR_SIZE_0		0x00
+#define ADDR_SIZE_1		0x01
+#define ADDR_SIZE_2		0x02
+#define ADDR_SIZE_3		0x03
 
 
 #define INDIRECT_WR 	0x00
@@ -69,65 +78,7 @@
 
 
 
-#define SPI_INTR_MODE			1
-#define SPI_POLLING_MODE		2
-#define DATA_BYTES 			65536
 
-// SPI BASE ADDRESS
-
-#define LOW				0
-#define HIGH 				1
-
-#define MSB				0
-#define LSB 				1
-
-#define SPI_FIXD_PERIPH         	0
-#define SPI_VAR_PERIPH          	1 
-
-#define CPOL_MODE_0         		0
-#define CPHA_MODE_0         		0  
-#define CPOL_MODE_3         		1
-#define CPHA_MODE_3         		1 
-
-#define BPT_8				0
-
-#define TXINTR_DIS			0
-#define RXINTR_DIS			0
-
-#define TXINTR_EN			1
-#define RXINTR_EN			1
-
-#define SPI_MODE_0			0
-#define SPI_MODE_3			3
-
-#define SPI_CS_0			0
-#define SPI_CS_1			1
-#define SPI_CS_2			2
-#define SPI_CS_3			3
-
-#define RX_TX_INTR_DIS			0
-#define TX_DIS_RX_EN_INTR		1
-#define RX_DIS_TX_EN_INTR		2
-#define RX_TX_INTR_EN			3
-
-#define SPI_BAUD_CFD_4        		0
-#define SPI_BAUD_CFD_8        		1 
-#define SPI_BAUD_CFD_16        		2 
-#define SPI_BAUD_CFD_32        		3
-#define SPI_BAUD_CFD_64        		4
-#define SPI_BAUD_CFD_128        	5 
-#define SPI_BAUD_CFD_256       		6
-#define SPI_BAUD_CFD_512        	7 
-#define SPI_BAUD_CFD_1024        	8 
-#define SPI_BAUD_CFD_2048        	9
-
-#define SPI_BUSY_BIT            	(1<<4)
-#define SPI_OVERR_BIT           	(1<<5)
-#define SPI_RX_COMPLETE_BIT    		(1<<6)
-#define SPI_TX_HOLD_EMPTY_BIT   	(1<<7) 
-
-#define SPI_RX_INT_STATUS_BIT       	(1<<2)
-#define SPI_TX_INT_STATUS_BIT       	(1<<3)
 
 #define QSPI_BASE_ADDR				0x10200100UL
 
@@ -137,9 +88,16 @@
 #define RD_FLASH_ID_CMD 			0x9F
 #define RESET_ENABLE_CMD			0x66
 #define RESET_FLASH_CMD				0x99
-
+#define WR_EN_LATCH_FLASH_CMD     	0x06
+#define BYTE4_ADDRESS_ENABLE_CMD 	0xB7
+#define QPI_MODE_ENABLE_CMD  		0x35
+#define SECTOR_ERASE_4BYTE_CMD  	0x21
+#define RD_XTD_RDREG_CMD  			0x81
+#define CLR_XTD_RDREG_CMD  			0x82
+#define PAGE_PROGRAM_4PP_CMD		0x12
+#define FAST_READ_4FRD_CMD			0x0C
 /*#define WR_DISABLE_LATCH_SPI_CMD			0x04
- #define WR_EN_LATCH_SPI_CMD     			0x06
+
  #define BYTE_PAGE_PGM_SPI_CMD  				0x02
  #define RD_DATA_BYTES_SPI_CMD  				0x03
  #define RD_STATUS_REG_SPI_CMD				0x05
@@ -202,34 +160,48 @@ typedef union {
  *
  ***************************************************/
 
-void Qspi_initialise(UC qspi_number);
-void Qspi_read_flash_register(UC qspi_number, UL address, UI dataLength,
+void qspi_initialise(UC qspi_number);
+void qspi_read_flash_register(UC qspi_number, UL address, UI dataLength,
 		UC command, UC instr_line, UC data_line, UC *read_data);
 
-void Qspi_instrTxt(UC qspi_number, UC instr_line, UC command);
+void qspi_instrTxt(UC qspi_number, UC instr_line, UC command);
 
-void Qspi_write_flash_register(UC qspi_number, UL address, UI dataLength,
+void qspi_write_flash_register(UC qspi_number, UL address, UI dataLength,
 		UC command, UC instr_line, UC data_line, UC wr_data);
 
-void Qspi_mem_write(UC qspi_number, UL Address, UI DataLength, UC command,
+void qspi_mem_write(UC qspi_number, UL Address, UI DataLength, UC command,
 		UC instr_line, UC data_line, UC data_size, UC address_line,
 		UC address_size, UC fifo_threshold, UC *write_data);
 
-void Qspi_mem_read(UC qspi_number, UL Address, UI DataLength, UC command,
+void qspi_mem_read(UC qspi_number, UL Address, UI DataLength, UC command,
 		UC instr_line, UC data_line, UC data_size, UC address_line,
 		UC address_size, UC fifo_threshold, UC *read_data);
 
-UC QSPI_wait_if_busy(UC qspi_number);
+UC qspi_wait_if_busy(UC qspi_number);
 
+void qspi_mem_erase(UC qspi_number, UL Address, UI DataLength, UC command,
+		UC instr_line, UC address_line, UC address_size) ;
 
+void qspi_write_read_444P_adrsize3(UC qspi_number, UI Pages, UI address,
+		UC Wfifo_thres, UC WData_size, UC Rfifo_thres, UC RData_size);
+void qspi_flash_read(UC qspi_number, UI RAddress, UI Rdata_len, UC i_line,
+		UC d_line, UC d_size, UC addr_line, UC addr_size, UC fifo_thres,UC *read_data);
+void qspi_flash_write(UC qspi_number, UI WAddress, UI Wdata_len, UC i_line,
+		UC d_line, UC d_size, UC addr_line, UC addr_size, UC fifo_thres,UC *wr_data);
+void qspi_flash_serase(UC qspi_number, UI SAddress, UI SData_len, UC i_line,
+		UC d_line, UC addr_line, UC addr_size);
+void qspi_init_transfer(UC qspi_number, UI Clk_Prescalar, UC fifo_thres,
+		UC Auto_poll_stop, UC Poll_Match);
+void flash_confg_444(UC qspi_number);
+void flash_busy_check(UC qspi_number, UC i_line, UC d_line);
 
-void FlashReadId(UC qspi_number);
-void Board_setup(UC qspi_number);
+UC comparedata(UC *bWrData, UC *bRdData, UL wDataLength);
+void flash_read_id(UC qspi_number);
+void board_setup(UC qspi_number);
 void qspi_delay(UL count);
 
 
-//void (*spi_handle_rx_intr)(void);  
-//void (*spi_handle_tx_intr)(void);
 
-#endif	/* _SPI_H */	
+
+#endif
 

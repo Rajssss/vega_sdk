@@ -34,7 +34,7 @@ SDK_PATH=${VEGA_SDK}
 #+++++++++++++++++++++++
 # Executable name
 #+++++++++++++++++++++++
-EXECUTABLE_NAME=main
+EXECUTABLE_NAME=qspi
 
 
 include $(SDK_PATH)/bsp/common/config.mk

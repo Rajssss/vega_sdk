@@ -4,7 +4,7 @@
  Project Code		: HD083D
  Created		: 07-Jul-2020
  Filename		: main.c
- Purpose		: Proximity sensor program
+ Purpose		: pir sensor program
  Description		: pir motion sensor program using gpio
  Author(s)		: Karthika P
  Email			: karthikap@cdac.in
