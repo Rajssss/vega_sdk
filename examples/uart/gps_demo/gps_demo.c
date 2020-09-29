@@ -192,14 +192,13 @@ void main() {
 	char error;
 	char str[100] = { 0, };
 	unsigned char data = 'A';
-	//while(wait);
 
-	printf("\nSet\n");
+	printf("\n\r *****************************************************************************");
+	printf("\n\r INFO: Connect GPS6MV2 module to UART 1 ");		
+	printf("\n\r *****************************************************************************");
 
 
 	uart_set_baud_rate(UART_1, 9600, 40000000);
-	while (1)
-
 	{
 		getGPSData();
 

@@ -28,6 +28,8 @@
 #include <include/config.h>
 #include <include/encoding.h>
 
+
+
 #if __riscv_xlen == 64
 #define MAXIMUM_INTR_COUNT 64
 #else
@@ -74,7 +76,7 @@ void interrupt_enable(UC intr_number)
 {
 	enable_irq();	// Enable global interrupt and external interrupt of the processor.
 	intr_regs.INTR_EN |= ((UL)1 << intr_number);	// Enable interrupt for peripheral in interrupt controller.
-	__asm__ __volatile__ ("fence");
+	__asm__ __volatile__ ("fence");	
 }
 
  
@@ -99,32 +101,22 @@ void irq_register_handler(UC irq_no, void (*irq_handler)()){///*irq_handler is f
  @param[Out] No output parameter.
 */
 
+
 void interrupt_handler(uintptr_t cause, uintptr_t epc, uintptr_t regs[32]){
+
+	//clear_csr(mie, MIP_MEIP);
 
 	UL intr_status = intr_regs.INTR_STATUS; 		// Read interrupt status register.
 
-	printf("%x\n",intr_status);
-	
-	/*
-
-	printf("\n\rTRAP\n\r");
-	printf("EPC : %lx\n\r",epc);
-	printf("Cause : %lx\n\r",cause);
-	printf("badaddress: %lx\n\r",read_const_csr(mbadaddr));
-	for(int i=0;i<32;i++)
-		printf("reg %d : %lx\n\r",i,regs[i]);*/
-
+	//printf("ISR: %x\n",intr_status);
 	
 
-	for(UL i = 0; i < MAXIMUM_INTR_COUNT ; i++) 
+	for(UL i = 0; i < 2 ; i++)  /*MAXIMUM_INTR_COUNT*/
 	{
-		if ((intr_status >> i) & (UL)1){
-			//printf("\nINTR if %d",i);
-			irq_table[i]();		// Invoke the peripheral handler as function pointer.
-			//printf("\nINTR if done");
+		if ((intr_status >> i) & (UL)1){			
+			irq_table[i]();		// Invoke the peripheral handler as function pointer.			
 		}
 
-	}
-	//printf("\nINTR handler return");
+	}	
 }
 

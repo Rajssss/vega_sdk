@@ -301,8 +301,7 @@ void main() {
 char rtc_str[100]={0,};
 clock_t total_time=0;
 	UL distance=0;
-
-		UL distance=0;
+		
 		printf("\n\r *****************************************************************************");
 		printf("\n\r INFO: Connect SSD1306 OLED module to I2C0 ");
 		printf("\n\r INFO: Connect RTC Module to I2C1 ");
