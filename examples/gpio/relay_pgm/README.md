@@ -1,4 +1,4 @@
-# LDR Sensor Demo Program
+# Relay Demo Program
 
 ## Wiring Diagram
 
