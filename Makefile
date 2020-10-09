@@ -11,6 +11,26 @@
 #See LICENSE for license details.
 
 EXAMPLES=./examples
+#+++++++++++++++++++++++
+# Configurations        
+#+++++++++++++++++++++++
+# Include the BSP settings
+
+CONFIG_PATH=~/.config/vega-tools/settings.mk
+ifeq ("$(wildcard $(CONFIG_PATH))","")
+$(error Please install [VEGA SDK]/[VEGA Tools] and setup the environment)
+endif
+
+include $(CONFIG_PATH)
+
+ifeq ("$(wildcard $(VEGA_TOOLCHAIN_PATH))","")
+$(error Please install [VEGA Tools] and setup the environment)
+endif
+
+ifeq ("$(wildcard $(VEGA_SDK))","")
+$(error Please install [VEGA SDK] and setup the environment)
+endif
+
 
 .PHONY: default
 default: all 

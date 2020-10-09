@@ -111,7 +111,7 @@ void interrupt_handler(uintptr_t cause, uintptr_t epc, uintptr_t regs[32]){
 	//printf("ISR: %x\n",intr_status);
 	
 
-	for(UL i = 0; i < 2 ; i++)  /*MAXIMUM_INTR_COUNT*/
+	for(UL i = 0; i < MAXIMUM_INTR_COUNT ; i++)  /*MAXIMUM_INTR_COUNT*/
 	{
 		if ((intr_status >> i) & (UL)1){			
 			irq_table[i]();		// Invoke the peripheral handler as function pointer.			

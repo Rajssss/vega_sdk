@@ -359,7 +359,7 @@ void main() {
 	while(1){
 		count++;
 		read_temperature();
-		if(celcius>30){
+		if(celcius>32){
 			ir_send(AC_ON);
 			udelay(100000);
 			ir_send(AC_ON);
@@ -385,7 +385,7 @@ void main() {
 		
 		modem_connect_remote(3,"10.176.19.212",80);
 		modem_POST_remote(3,"/tms/index.php","10.176.19.212",send_str);
-		udelay(5000000);
+		udelay(25000000);
 	}
 	//modem_POST_response();
 	while(1);
