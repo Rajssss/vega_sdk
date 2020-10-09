@@ -28,7 +28,10 @@
  @return Void function.
 
  */
+
+
 #include "stdlib.h"
+#if __riscv_xlen == 64 //QSPI driver available only for thejas64
 #include "qspi.h"
 #include "debug_uart.h"
 
@@ -478,3 +481,11 @@ UC comparedata(UC *bWrData, UC *bRdData, UL wDataLength) {
 	return status;
 }
 
+#else
+void main() {
+printf("QSPI is only available in THEJAS64 SOC\n");
+	
+	while (1)
+		;
+}
+#endif

@@ -26,6 +26,7 @@
  *
  *
  ***************************************************/
+#if __riscv_xlen == 64 //QSPI driver available only for thejas64
 #define QSPI_0			0
 #define QSPI_1			1
 #define QSPI_2			2
@@ -201,7 +202,7 @@ void board_setup(UC qspi_number);
 void qspi_delay(UL count);
 
 
-
+#endif
 
 #endif
 
