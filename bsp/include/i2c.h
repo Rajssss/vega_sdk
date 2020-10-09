@@ -40,10 +40,20 @@ typedef struct {
 	UC I2C_TXCLR;
 } I2C_REG_TYPE;
 
+#define SYS_FREQ 	40000000
+#define I2C_FREQ	100000
 
-#define I2C_0 0
-#define I2C_1 1
 
+
+#define I2C_0 	0
+#define I2C_1	1
+
+
+#define I2C_READ 	1
+#define I2C_WRITE 	0
+
+#define I2C_EEPROM_ADDR_WR	(0xA2)
+#define I2C_EEPROM_ADDR_RD	(0xA3)
 
 
 //Register address mapping

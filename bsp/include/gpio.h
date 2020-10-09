@@ -57,6 +57,9 @@
 #define GPIO_0			0
 #define GPIO_1			1
 
+#define GPIO_2			2
+#define GPIO_3			3
+
 #define ON_LED			1
 #define OFF_LED			0
 

@@ -4,9 +4,9 @@
  Project Name		: MDP - Microprocessor Development Project
  Project Code		: HD083D
  Created		: 08-Jul-2020
- Filename		: i2c_SSD1306.c
- Purpose		: I2C SSD1306 interface
- Description		: Sample SSD1306 with I2C interface
+ Filename		: i2c_scanner.c
+ Purpose		: I2C scanner program
+ Description		: i2c_scanner program to detect connected I2C device address
  Author(s)		: Premjith A V
  Email			: premjith@cdac.in
 
@@ -14,10 +14,10 @@
  ***************************************************/
 
 /**
- @file i2c_SSD1306.c
- @brief contains routines for I2C SSD1306 interface
+ @file i2c_scanner.c
+ @brief contains routines for I2C scanner
  @detail Includes software functions declarations to initialize,
- configure, write and read SSD1306 over I2C interface
+
  */
 
 #include "i2c.h"
@@ -25,8 +25,8 @@
 
 /**
  @fn main
- @brief writes and reads SSD1306 with I2C interface
- @details Initializes configures I2C to write, read and compare data in SSD1306
+ @brief writes and reads scanner with I2C interface
+ @details Initializes configures I2C to write, read and compare data in scanner
  @param[in] No input parameters.
  @param[Out] No ouput parameter.
  @return Void function.

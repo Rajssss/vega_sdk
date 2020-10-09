@@ -97,7 +97,8 @@
 #define SPI_RX_INT_STATUS_BIT       	(1<<2)
 #define SPI_TX_INT_STATUS_BIT       	(1<<3)
 
-
+#define SPI_RX_INTR			1
+#define SPI_TX_INTR			2
 /*************Micron M25P80 Serial Flash************* 
 *************Embedded Memory Command Set************/
 /*#define WR_DISABLE_LATCH_SPI_CMD			0x04
@@ -178,6 +179,9 @@ void SPI_wait_if_busy(UC spi_number);
 void SPI_set_CSAAT_pin(UC spi_number, UC status);
 US SPI_read_rx_reg(UC spi_number);
 void SPI_write_tx_reg(UC spi_number,US bData);
+UC spi_intr_status(UC spi_number);
+void spi_register_isr(UC spi_number,void (*spi_isr)());
+
 
 //void (*spi_handle_rx_intr)(void);  
 //void (*spi_handle_tx_intr)(void);

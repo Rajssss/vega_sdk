@@ -66,16 +66,16 @@ RISCV_CFLAGS    += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMOD
 RISCV_CXXFLAGS  += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 RISCV_ASFLAGS   += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 # Prune unused functions and data
-RISCV_CFLAGS   += -fno-builtin-printf -fdata-sections -ffunction-sections -fno-builtin-memcmp 
-RISCV_CXXFLAGS += -fno-builtin-printf -fdata-sections -ffunction-sections -fno-builtin-memcmp 
+RISCV_CFLAGS   += -fno-builtin-printf -fdata-sections -ffunction-sections -fno-builtin-memcmp #-g -Og
+RISCV_CXXFLAGS += -fno-builtin-printf -fdata-sections -ffunction-sections -fno-builtin-memcmp #-g -Og
 # Include baremetal driver headers
 RISCV_CCASFLAGS += -I$(SDK_PATH)/bsp/include
 RISCV_CFLAGS    += -I$(SDK_PATH)/bsp/include
 RISCV_CXXFLAGS  += -I$(SDK_PATH)/bsp/include
 # newlib-nano spec
-RISCV_CCASFLAGS += --specs=nano.specs
-RISCV_CFLAGS    += --specs=nano.specs
-RISCV_CXXFLAGS  += --specs=nano.specs
+RISCV_CCASFLAGS += --specs=nano.specs -specs=nosys.specs
+RISCV_CFLAGS    += --specs=nano.specs -specs=nosys.specs
+RISCV_CXXFLAGS  += --specs=nano.specs -specs=nosys.specs
 
 # Linker will remove the unused sections
 RISCV_LDFLAGS += -Wl,--gc-sections
@@ -124,9 +124,17 @@ all:   build_vega_lib $(PROGRAM_ELF)
 clean:
 	rm -f $(BIN)/*
 	@rm -f $(SDK_PATH)/bin/$(EXECUTABLE_NAME).bin
-	@cd $(SDK_PATH)/bsp/ && ./clean.sh	
+
+distclean:
+	rm -r -f $(BIN)	
+	@rm -f $(SDK_PATH)/bin/$(EXECUTABLE_NAME).bin
+	@cd $(SDK_PATH)/bsp/ && ./clean.sh
+
 mrproper:
 	rm -r -f $(BIN)	
+	@rm -f $(SDK_PATH)/bin/$(EXECUTABLE_NAME).bin
+	@cd $(SDK_PATH)/bsp/ && ./clean.sh
+
 .PHONY: build clean
 
 $(PROGRAM_ELF): $(OBJECT_FILES_C) $(OBJECT_FILES_S) 

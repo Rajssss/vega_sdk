@@ -18,6 +18,12 @@ default: all
 .SILENT: clean all
 
 .PHONY: clean
+
+distclean: clean	
+	@rm -f bin/*
+	@cd bsp && ./clean.sh
+	
+
 clean: $(EXAMPLES)
 	for file in $^ ; do \
 	echo "--------------------------------------------------------------------------------------------"; \

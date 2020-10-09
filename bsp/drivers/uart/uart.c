@@ -62,7 +62,7 @@ Disable DR interrupt & THRE interrupt
 @return Void function.
 */
 void uart_set_baud_rate(UC uart_number,UL Baud_rate, UL Uart_clock){
-	UC divisor;
+	UL divisor;
 		divisor = (Uart_clock / (Baud_rate * 16));
 		UartReg(uart_number).UART_LCR = 0x83;
 		UartReg(uart_number).UART_DR = divisor & 0xFF; //LSB
@@ -94,7 +94,7 @@ Bit 1:0: Number of data bits
  */
 
 void uart_configure(UC uart_number, UL Baud_rate, UL frame_value, UL Uart_clock) {
-	UC divisor;
+	UL divisor;
 	divisor = (Uart_clock / (Baud_rate * 16));
 	UartReg(uart_number).UART_LCR = frame_value; //0x83
 	UartReg(uart_number).UART_DR = divisor & 0xFF; //LSB
@@ -123,12 +123,12 @@ void uart_putchar(UC uart_number, UC bTxCharacter, char *error) {
 	while ((UartReg(uart_number).UART_LSR & 0x20) != 0x20
 			&& (UartReg(uart_number).UART_LSR & 0x40) != 0x40)
 		; //checks whether transmitter id idle and transmitter holding register is empty , to start transmitting
-	printf("ready to txmt \n\r");
+	//printf("ready to txmt \n\r");
 	UartReg(uart_number).UART_DR = bTxCharacter;
 	__asm__ __volatile__ ("fence");
 	while ((UartReg(uart_number).UART_LSR & 0x20) != 0x20)
 		;
-	printf("\n tx complete \n\r");
+	//printf("\n tx complete \n\r");
 	if ((UartReg(uart_number).UART_LSR & 0x04) == 0x04) {
 			//printf("ParityError\n\r");
 			*error = UART_PARITY_ERROR;
@@ -157,7 +157,7 @@ UC uart_getchar(UC uart_number, char *error) {
 
 	while ((UartReg(uart_number).UART_LSR & 0x01) != 0x01)
 		; //waiting for data
-	printf("ready to receive \n\r");
+	//printf("ready to receive \n\r");
 	Rxd_data = UartReg(uart_number).UART_DR; //
 
 	if ((UartReg(uart_number).UART_LSR & 0x04) == 0x04) {
@@ -187,7 +187,8 @@ UC uart_getchar(UC uart_number, char *error) {
 
 void uart_intr_enable(UC uart_number, UC tx_intr, UC rx_intr) {
 
-	UartReg(uart_number).UART_IE = ((rx_intr << 2) | (tx_intr << 1));
+	//UartReg(uart_number).UART_IE = ((rx_intr << 2) | (tx_intr << 1));
+	UartReg(uart_number).UART_IE = ((tx_intr << 1) | (rx_intr));
 	__asm__ __volatile__ ("fence");
 }
 
