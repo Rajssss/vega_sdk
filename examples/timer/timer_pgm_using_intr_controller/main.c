@@ -89,15 +89,17 @@ void timer2_intr_handler(void) {
 */
 void main ()
 {
+
 	printf("\n\r TIMER TEST CASE - INTR Method");
 
-	//timer_register_isr(TIMER_0, timer0_intr_handler);  // Register timer0 Intr.
-	//timer_register_isr(TIMER_1, timer1_intr_handler);  // Register timer1 Intr.
+	timer_run_in_intr_mode(TIMER_0,0x2000000);	    // Load timer0 and enable interrupt.
+	timer_run_in_intr_mode(TIMER_1,0x5000000);	    // Load timer1 and enable interrupt.
+	timer_run_in_intr_mode(TIMER_2,0xA000000);          // Load timer2 and enable interrupt.
+
+	timer_register_isr(TIMER_0, timer0_intr_handler);  // Register timer0 Intr.
+	timer_register_isr(TIMER_1, timer1_intr_handler);  // Register timer1 Intr.
 	timer_register_isr(TIMER_2, timer2_intr_handler);  // Register timer2 Intr.
 
-	//timer_run_in_intr_mode(TIMER_0,0x20000);		// Load timer0 and enable interrupt.
-	//timer_run_in_intr_mode(TIMER_1,0x50000);		// Load timer1 and enable interrupt.
-	timer_run_in_intr_mode(TIMER_2,0xA0000);          // Load timer2 and enable interrupt.
 
 	while(1);
  }

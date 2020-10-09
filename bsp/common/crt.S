@@ -239,7 +239,7 @@ trap_entry:
   mret
 
   .align 2
-  /*.section .INTERRUPT_isr_sect_0,"ax",@progbits*/
+  .section .INTERRUPT_isr_sect_0,"ax",@progbits
   .globl INTERRUPT_Handler_0
 INTERRUPT_Handler_0:
   addi sp, sp, -272

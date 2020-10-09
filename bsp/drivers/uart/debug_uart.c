@@ -30,7 +30,7 @@
  */
 void init_uart(void) {
 	uart_regs.UART_LCR = 0x83; //Divisor latch enabled
-	uart_regs.UART_DR = 0x0e; //0x0b-20mHz,0x02-5mHz,0x10-30mHz;//0x0e-25mHz;0x0f-29mHz,0x1b-50mHz; 0x15-40mHz ;0x28-75mHz  //Divisor LSB
+	uart_regs.UART_DR = 0x15; //0x0b-20mHz,0x02-5mHz,0x10-30mHz;//0x0e-25mHz;0x0f-29mHz,0x1b-50mHz; 0x15-40mHz ;0x28-75mHz  //Divisor LSB
 	uart_regs.UART_IE = 0x00; //Divisor MSB
 	uart_regs.UART_LCR = 0x03; //Divisor latch disabled, stop-bits = 1, parity = none, data-bits = 8
 	uart_regs.UART_IE = 0x00; //Interrupts disabled
