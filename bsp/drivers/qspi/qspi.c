@@ -22,6 +22,8 @@
 
  ***************************************************************************/
 
+#if __riscv_xlen == 64 //QSPI driver available only for thejas64
+
 #include <include/stdlib.h>
 #include <include/qspi.h>
 #include <include/config.h>
@@ -494,3 +496,4 @@ UC qspi_wait_if_busy(UC qspi_number) {
 	}
 
 }
+#endif
